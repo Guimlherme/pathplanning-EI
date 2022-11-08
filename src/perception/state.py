@@ -10,7 +10,7 @@ OBSTACLE_THRESHOLD = 0.3
 OBSTACLE_DETECTED_CYCLE_THRESHOLD = 10
 
 class State:
-    def __init__(self, world_map : Map):
+    def __init__(self, world_map : Map, control_panel):
         self.theta = 0
         self.x = 0
         self.y = 0
@@ -20,7 +20,15 @@ class State:
         self.obstacle_detected = False
         self.obstacle_detected_cycle_count = 0
 
+        self.control_panel = control_panel
+
     def update(self, perception : Perception) -> None:
+        if self.control_panel.reset_flag:
+            self.x = self.control_panel.reset_values[0]
+            self.y = self.control_panel.reset_values[1]
+            self.theta = self.control_panel.reset_values[2]
+            self.control_panel.reset_flag = False
+
         self.theta += perception.angular_speed * TIMESTEP 
         self.x += perception.linear_speed * cos(self.theta) * TIMESTEP 
         self.y += perception.linear_speed * sin(self.theta) * TIMESTEP 

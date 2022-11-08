@@ -19,7 +19,7 @@ class Stopped(Command):
         super().__init__(arduino)
 
     def execute(self):
-        return
+        write_order(serial_file, Order.STOP)
     
     def get_name(self):
         return "Stopped"
@@ -30,6 +30,8 @@ class HalfTurn(Command):
         
     def execute(self):
         print("HalfTurn")
+        # TODO: currently it is stopping, change to half turn
+        write_order(serial_file, Order.STOP)
 
     def get_name(self):
         return "HalfTurn"
@@ -44,7 +46,6 @@ class Forward(Command):
         write_order(self.arduino.serial_file, Order.MOTOR)
         write_i8(self.arduino.serial_file, self.arduino.motor_speed) #valeur moteur droit
         write_i8(self.arduino.serial_file, self.arduino.motor_speed) #valeur moteur gauche
-        return
     
     def get_name(self):
         return "Forward"

@@ -6,9 +6,14 @@ class ControlPanel:
     def __init__(self):
         self.run = False
         self.target = (0, 0)
+        self.reset_flag = False
     
     def set_target(self, x, y):
         self.target = (x, y)
+
+    def reset_state(self, x, y, theta):
+        self.reset_flag = True
+        self.reset_values = (x, y, theta)
     
     def print(self):
         print("Running =", self.run, " target = ", self.target)

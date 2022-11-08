@@ -38,6 +38,8 @@ class Network:
             self.control_panel.run = False
         elif commands[0] == 't':
             self.control_panel.set_target(int(commands[1]), int(commands[2]))
+        elif commands[0] == 'i':
+            self.control_panel.reset_state(int(commands[1]), int(commands[2]), int(commands[3]))
         else:
             return "Could not parse command"
         return "OK"
