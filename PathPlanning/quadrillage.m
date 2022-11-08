@@ -4,29 +4,25 @@ close all
 Ts = 1; %sampling time
 scenario = drivingScenario('SampleTime', Ts);
 
-rng(42);
+rng(122);
 
 % Add all road segments
 L=10;
-planner = ()
-
 for i=0:L
     for j=0:L
         if j<L
             roadCenters = [i*L j*L 0 ;i*L (j+1)*L 0];
             laneSpecification = lanespec(1);
             road(scenario, roadCenters, 'Lanes', laneSpecification);
-            planer.addroad(roadCenters, laneSpecification)
         end
         if i<L
             roadCenters = [i*L j*L 0 ;(i+1)*L j*L 0];
             laneSpecification = lanespec(1);
             road(scenario, roadCenters, 'Lanes', laneSpecification);
-            planer.addroad(roadCenters, laneSpecification)
         end
     end
 end
-%%
+
 %ajouter vehicules
 Nb_car=1;      %nbre de voiture
 for i=1:Nb_car
@@ -40,16 +36,21 @@ for i=1:Nb_car
 end
 
 %ajouter obstacles
-Nb_Obstacles= 5; % nbre d'obstacles
+Nb_Obstacles= 7; % nbre d'obstacles
 for i=1:Nb_Obstacles
-    pos_obstacle(i,:)= [max((randi(6)-1)*L,1*L) (randi(6)-1)*L 0];  %position de l'obstacle
-    car(i+Nb_car) = vehicle(scenario, 'ClassID', 1, 'Position', [pos_obstacle(i,:)]);
+    obstacle =  [max((randi(6)-1)*L,1*L) (randi(6)-1)*L 0];
+    while obstacle == point_livraison
+        obstacle =   [max((randi(6)-1)*L,1*L) (randi(6)-1)*L 0] ;
+    end
+    pos_obstacle(i,:)=obstacle; %position de l'obstacle
+    car(i+Nb_car) = vehicle(scenario, 'ClassID', 1, 'Position', [pos_obstacle(i, :)]);
 end
-
 plot(scenario) 
+hold on;
+scatter(point_livraison(1), point_livraison(2), 'rx')
 
 
-
+map = ones(10, 10);
 while advance(scenario)
     for j=1:Nb_car
         %detection des collisions
@@ -57,14 +58,31 @@ while advance(scenario)
         for i=1:Nb_car+Nb_Obstacles
             if (i~=j)  
                  [zoneX,zoneY,flag_stop(i)] = distancequadrillage(car(j),car(i));
-                if max(flag_stop)==1  stop(j)=1;else stop(j)=0;end  %la voiture s'arrete
+                if max(flag_stop)==1  
+                    stop(j)=1;
+                    ix = pos_to_index(car(j).Position);
+                    car(j).Yaw
+                    car(j).Position
+                    if car(j).Yaw == 180
+                        map(ix(1)-1, ix(2)) = 0;
+                    elseif car(j).Yaw == 90
+                        map(ix(1), ix(2)+1) = 0;
+                    elseif car(j).Yaw == -90
+                        map(ix(1), ix(2)-1) = 0;
+                    elseif car(j).Yaw == 0
+                        map(ix(1)+1, ix(2)) = 0;
+                    end
+                else stop(j)=0;end  %la voiture s'arrete
+                
             end
         end
         %deplacement des voitures
-        if (scenario.SimulationTime>T0(j)) && (stop(j)==0)
-            [next_position, next_Yaw] = motionquadrillage(car(j),point_livraison(j,:),speed(j),Ts);
-            car(j).Position=next_position;
-            car(j).Yaw=next_Yaw;
+        if (scenario.SimulationTime>T0(j)) 
+            [map, next_position, next_Yaw, final] = motionquadrillage(map, car(j),point_livraison(j,:),speed(j),Ts);
+            %if (stop(j)==0)
+                car(j).Position=next_position;
+                car(j).Yaw=next_Yaw;
+           % end
         end
         %verification si point de livraison atteind ; la voiture repart au
         %point de depart
@@ -85,6 +103,5 @@ while advance(scenario)
     end
 	updatePlots(scenario) 
     pause(0.1)
+   
 end
-
-
