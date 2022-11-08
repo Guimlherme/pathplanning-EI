@@ -2,7 +2,7 @@ import socket
 
 def client_program():
     host = "127.0.0.1" 
-    port = 1233 
+    port = 1234
 
     client_socket = socket.socket()  
     client_socket.connect((host, port))  

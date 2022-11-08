@@ -14,6 +14,7 @@ parser = argparse.ArgumentParser(
     description = 'Server for autosync robot.')
 parser.add_argument('-nn', '--no_network', action='store_true')
 parser.add_argument('-m', '--mock', action='store_true')
+parser.add_argument('-d', '--debug', action='store_true')
 args = parser.parse_args()
 
 # Build world map
@@ -22,19 +23,20 @@ world_map.add_node(0, 0, 0)
 world_map.add_node(1, 1, 0)
 world_map.add_edge(0, 1)
 
+debug = args.debug
 # Build sensors and decision making
-sensors = MockSensors(debug=True)
-if not args.mock:
-    sensors = ArduinoSensors(debug=True)
-
-decision_making = DecisionMaking(debug=True)
-
-# Instantiate the robot
-robot = Robot(sensors, decision_making, world_map)
-
-# Listen to network communication
 control_panel = ControlPanel()
 
+sensors = MockSensors(debug=debug)
+if not args.mock:
+    sensors = ArduinoSensors(debug=debug)
+
+decision_making = DecisionMaking(debug=debug)
+
+# Instantiate the robot
+robot = Robot(sensors, decision_making, world_map, control_panel)
+
+# Listen to network communication
 if args.no_network:
     control_panel.run = True
 else:
@@ -43,9 +45,14 @@ else:
     network_thread.start()
 
 # Main loop
+count = 0
 while True:
+    if count == 100:
+        control_panel.print()
+        count = 0
     if control_panel.run:
         robot.run()
+    count += 1
 
 # Finalizing
 if not args.no_network:

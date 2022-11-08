@@ -35,6 +35,6 @@ class State:
         else:
             self.obstacle_detected = False
     
-    def found_target(self) -> bool:
-        return True
+    def position_is(self, target) -> bool:
+        return self.x == target[0] and self.y == target[1]
     

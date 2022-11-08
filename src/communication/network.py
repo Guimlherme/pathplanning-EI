@@ -7,7 +7,7 @@ class Network:
 
     def start_server(self):
         host = "127.0.0.1"
-        port = 1233
+        port = 1234
 
         self.server_socket = socket.socket() 
         try:
@@ -30,10 +30,13 @@ class Network:
         conn.close() 
     
     def parse(self, data):
-        if data == 'r':
+        commands = data.split(' ')
+        if commands[0] == 'r':
             self.control_panel.run = True
-        elif data == 's':
+        elif commands[0] == 's':
             self.control_panel.run = False
+        elif commands[0] == 't':
+            self.control_panel.set_target(int(commands[1]), int(commands[2]))
         else:
             return "Could not parse command"
         return "OK"
