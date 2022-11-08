@@ -7,7 +7,7 @@ class Command:
 
 class Stopped(Command):
     def execute(self):
-        print("Stopped")
+        return
     
     def get_name(self):
         return "Stopped"
@@ -20,7 +20,7 @@ class HalfTurn(Command):
         return "HalfTurn"
 
 class Forward(Command):
-    def __init__(angle):
+    def __init__(self, angle):
         self.line_angle = angle
 
     def execute(self):

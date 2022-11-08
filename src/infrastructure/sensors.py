@@ -1,10 +1,10 @@
-from perception import Perception
+import perception
 
 class ArduinoSensors:
     def __init__(self, debug=False):
         self.debug = debug
 
-    def collect(self) -> Perception:
+    def collect(self) -> perception.Perception:
         if self.debug:
             print("Collecting from sensors")
         
@@ -12,4 +12,4 @@ class ArduinoSensors:
         linear_speed = 1 
         angular_speed = 1
         obstacle_distance = 1
-        return Perception(angle, linear_speed, angular_speed, obstacle_distance)
+        return perception.Perception(angle, linear_speed, angular_speed, obstacle_distance)
