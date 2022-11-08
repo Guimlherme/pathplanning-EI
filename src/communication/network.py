@@ -1,13 +1,14 @@
 import socket
 
 class Network:
-    def __init__(self, control_panel):
+    def __init__(self, control_panel, config):
         self.control_panel = control_panel
+        self.config = config
         self.start_server()
 
     def start_server(self):
-        host = "127.0.0.1"
-        port = 1234
+        host = self.config.get_setting('host')
+        port = self.config.get_setting('port')
 
         self.server_socket = socket.socket() 
         try:

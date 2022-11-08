@@ -4,6 +4,7 @@ from communication import Network
 from control import MockCommandFactory
 from threading import Thread
 from robot import ControlPanel, Robot
+from config import Configs
 
 from infrastructure import ArduinoSensors, ArduinoCommandFactory, Arduino
 
@@ -17,6 +18,8 @@ parser.add_argument('-nn', '--no_network', action='store_true')
 parser.add_argument('-m', '--mock', action='store_true')
 parser.add_argument('-d', '--debug', action='store_true')
 args = parser.parse_args()
+
+configs = Configs()
 
 # Build world map
 world_map = Map()
@@ -44,7 +47,7 @@ robot = Robot(sensors, decision_making, world_map, control_panel)
 if args.no_network:
     control_panel.run = True
 else:
-    network = Network(control_panel)
+    network = Network(control_panel, configs)
     network_thread = Thread(target=network.read)
     network_thread.start()
 

@@ -1,8 +1,9 @@
 import socket
+import json
 
-def client_program():
-    host = "127.0.0.1" 
-    port = 1234
+def client_program(config):
+    host = config['host']
+    port = config['port']
 
     client_socket = socket.socket()  
     client_socket.connect((host, port))  
@@ -19,4 +20,6 @@ def client_program():
 
 
 if __name__ == '__main__':
-    client_program()
+    with open("config.json", "r") as f:
+        config = json.load(f)
+    client_program(config)
