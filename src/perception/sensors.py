@@ -7,4 +7,4 @@ class Sensors:
     def collect(self) -> Perception:
         if self.debug:
             print("Collecting from sensors")
-        return Perception(0.5, 0.5)
+        return Perception(0.5, 0.5, 0.5)
