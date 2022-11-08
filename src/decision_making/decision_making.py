@@ -10,7 +10,7 @@ class DecisionMaking:
 
         if state.found_target():
             command = Stopped()
-        elif state.object_detected():
+        elif state.obstacle_detected:
             command = HalfTurn()
         else:
             # follow line
