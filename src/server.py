@@ -5,7 +5,7 @@ from control import MockCommandFactory
 from threading import Thread
 from robot import ControlPanel, Robot
 
-from infrastructure import ArduinoSensors, ArduinoCommandFactory
+from infrastructure import ArduinoSensors, ArduinoCommandFactory, Arduino
 
 import argparse
 
@@ -31,8 +31,9 @@ control_panel = ControlPanel()
 sensors = MockSensors(debug=debug)
 command_factory = MockCommandFactory()
 if not args.mock:
-    sensors = ArduinoSensors(debug=debug)
-    command_factory = ArduinoCommandFactory(debug=debug)
+    arduino = Arduino()
+    sensors = ArduinoSensors(arduino, debug=debug)
+    command_factory = ArduinoCommandFactory(arduino, debug=debug)
 
 decision_making = DecisionMaking(command_factory, debug=debug)
 

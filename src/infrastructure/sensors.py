@@ -1,7 +1,7 @@
 import perception
 
 class ArduinoSensors:
-    def __init__(self, debug=False):
+    def __init__(self, arduino, debug=False):
         self.debug = debug
 
     def collect(self) -> perception.Perception:
