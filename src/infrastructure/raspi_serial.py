@@ -216,7 +216,7 @@ def process_cmd(cmd):
         write_order(serial_file, Order.SERVO)
         write_i16(serial_file, 90) #valeur angle servo
     elif cmd_type["[u]ltrasound"]:
-        print('ULtrasound : ', lectureULtrasound())
+        print('ULtrasound : ', lectureUltrasound())
     else:
         print("Invalid command")
 
