@@ -18,7 +18,7 @@ class State:
         self.x += perception.linear_speed * cos(self.theta) * TIMESTEP 
         self.y += perception.linear_speed * sin(self.theta) * TIMESTEP 
 
-        self.node = self.world_map.get_closest(self.node, self.x, self.y)
+        self.node = self.world_map.get_closest_node(self.node, self.x, self.y)
     
     def found_target(self) -> bool:
         return True
