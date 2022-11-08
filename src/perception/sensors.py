@@ -11,4 +11,4 @@ class MockSensors:
     def collect(self) -> Perception:
         if self.debug:
             print("Collecting from sensors")
-        return Perception(0.5, 0.5, 0.5, 0.2)
+        return Perception(0.5, 0.5, 0.5, 0.4)

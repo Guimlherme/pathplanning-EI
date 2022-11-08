@@ -1,19 +1,18 @@
-from control import Stopped, HalfTurn, Forward, Command
-
 class DecisionMaking:
-    def __init__(self, debug=False):
+    def __init__(self, command_factory, debug=False):
+        self.command_factory = command_factory
         self.debug = debug
 
-    def decide(self, state, target, perception) -> Command:
+    def decide(self, state, target, perception):
         if self.debug:
             print("Running decision making")
 
         if state.position_is(target):
-            command = Stopped()
+            command = self.command_factory.stopped()
         elif state.obstacle_detected:
-            command = HalfTurn()
+            command = self.command_factory.half_turn()
         else:
-            command = Forward(perception.line_angle)
+            command = self.command_factory.forward(perception.line_angle)
             # TODO: what if there is more than one angle? path planning
 
         if self.debug:

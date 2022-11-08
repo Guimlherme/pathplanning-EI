@@ -28,3 +28,13 @@ class Forward(Command):
     
     def get_name(self):
         return "Forward"
+
+class MockCommandFactory:
+    def stopped(self):
+        return Stopped()
+
+    def forward(self, line_angle):
+        return Forward(line_angle)
+
+    def half_turn(self):
+        return HalfTurn()
