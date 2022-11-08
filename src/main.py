@@ -18,10 +18,10 @@ world_map = Map()
 world_map.add_node(0, 0, 0)
 world_map.add_node(1, 1, 0)
 world_map.add_edge(0, 1)
+world_map.print()
 
 sensors = Sensors(debug=True)
 decision_making = DecisionMaking(debug=True)
 robot = Robot(sensors, decision_making, world_map)
 
 robot.run()
-            
