@@ -1,0 +1,39 @@
+import socket
+
+class Network:
+    def __init__(self, control_panel):
+        self.control_panel = control_panel
+        self.start_server()
+
+    def start_server(self):
+        host = "127.0.0.1"
+        port = 1233
+
+        self.server_socket = socket.socket() 
+        try:
+            self.server_socket.bind((host, port))
+        except:
+            raise Exception("Could not start server")
+
+    def read(self): 
+        # configure how many client the server can listen simultaneously
+        self.server_socket.listen(1)
+        conn, address = self.server_socket.accept() 
+        print("Connection from: " + str(address))
+        while True:
+            data = conn.recv(1024).decode()
+            if not data:
+                break # if data is not received break
+            print("Received from network: " + str(data))
+            result = self.parse(data)
+            conn.send(result.encode()) 
+        conn.close() 
+    
+    def parse(self, data):
+        if data == 'r':
+            self.control_panel.run = True
+        elif data == 's':
+            self.control_panel.run = False
+        else:
+            return "Could not parse command"
+        return "OK"
