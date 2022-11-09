@@ -1,5 +1,6 @@
 from .robust_serial import write_order, Order, write_i8, write_i16, read_i16, read_i32, read_i8
 from .robust_serial.utils import open_serial_port
+import struct
 
 import perception
 import numpy as np 
@@ -15,28 +16,28 @@ class ArduinoSensors:
         return image
 
     def left_encoder(self):
-        write_order(serial_file, Order.READENCODERl)
+        write_order(self.arduino.serial_file, Order.READENCODERl)
         while True:
             try:
-                g = read_i16(serial_file)
+                g = read_i16(self.arduino.serial_file)
                 break
             except struct.error:
                 pass
             except TimeoutError:
-                write_order(serial_file, Order.READENCODERl)
+                write_order(self.arduino.serial_file, Order.READENCODERl)
                 pass
         return g
 
     def right_encoder(self):
-        write_order(serial_file, Order.READENCODERr)
+        write_order(self.arduino.serial_file, Order.READENCODERr)
         while True:
             try:
-                d = read_i16(serial_file)
+                d = read_i16(self.arduino.serial_file)
                 break
             except struct.error:
                 pass
             except TimeoutError:
-                write_order(serial_file, Order.READENCODERr)
+                write_order(self.arduino.serial_file, Order.READENCODERr)
                 pass
         return d
 
