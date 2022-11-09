@@ -54,3 +54,6 @@ class State:
     def position_is(self, target) -> bool:
         return self.x == target[0] and self.y == target[1]
     
+    def intersection_detected(self) -> bool:
+        #  TODO: implement
+        return False

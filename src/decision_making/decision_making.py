@@ -11,9 +11,11 @@ class DecisionMaking:
             command = self.command_factory.stopped()
         elif state.obstacle_detected:
             command = self.command_factory.half_turn()
+        elif state.intersection_detected():
+            # TODO: decide next location (path planning) and make a left or right turn
+            command = self.command_factory.forward(perception.line_angle)
         else:
             command = self.command_factory.forward(perception.line_angle)
-            # TODO: what if there is more than one angle? path planning
 
         if self.debug:
             print("Decided command", command.get_name())

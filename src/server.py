@@ -1,13 +1,13 @@
-from perception import MockSensors, State, Map, Sensing
+from perception import State, Map, Sensing
 from decision_making import DecisionMaking
 from communication import Network
-from control import MockCommandFactory
 from threading import Thread
 from robot import ControlPanel, Robot
 from config import Configs
 from clock import SystemClock
 
-from infrastructure import ArduinoSensors, ArduinoCommandFactory, Arduino
+from infrastructure import Arduino, ArduinoSensors, ArduinoCommandFactory
+from infrastructure.mock import MockSensors, MockCommandFactory
 
 import argparse
 
@@ -37,8 +37,9 @@ sensors = MockSensors(system_clock, debug=debug)
 command_factory = MockCommandFactory()
 if not args.mock:
     arduino = Arduino()
+    arduino.connect()
     sensors = ArduinoSensors(arduino, debug=debug)
-    command_factory = ArduinoCommandFactory(arduino, debug=debug)
+    command_factory = ArduinoCommandFactory(arduino)
 
 sensing = Sensing(sensors)
 decision_making = DecisionMaking(command_factory, debug=debug)

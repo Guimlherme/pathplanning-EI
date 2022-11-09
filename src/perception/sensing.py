@@ -22,7 +22,7 @@ class Sensing:
         perception.set_obstacle_distance(object_distance)
 
     def collect_vision(self, perception):
-        print("Collecting from vision")
+        # print("Collecting from vision")
             
         image = self.sensors.camera_shot()
         line_angle = preprocessing_image(image)

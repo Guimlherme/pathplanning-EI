@@ -1,9 +1,4 @@
-class Command:
-    def get_name(self):
-        return "Abstract Command"
-
-    def execute(self):
-        raise Exception('Abstract Command cannot be executed')
+from command import Command
 
 class Stopped(Command):
     def execute(self):
@@ -24,7 +19,6 @@ class Forward(Command):
         self.line_angle = angle
 
     def execute(self):
-        # print("Forward")
         pass
     
     def get_name(self):

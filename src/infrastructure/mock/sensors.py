@@ -1,7 +1,6 @@
-from .perception import Perception
 import numpy as np 
 import time
-import cv2 
+
 class MockSensors:
     def __init__(self, system_clock, debug=False):
         self.debug = debug

@@ -1,3 +1,6 @@
+from .robust_serial.utils import open_serial_port
+from .constants import BAUDRATE
+
 class Arduino:
     def __init__(self):
         self.serial_file = None
