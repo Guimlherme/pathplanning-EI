@@ -20,8 +20,8 @@ def preprocessing_image(image,save_photos=False):
 
   # Define range of white color in HSV
   #hue (matiz), saturation (saturação) e value (valor)
-  lower= np.array([0, 0, 164])
-  upper = np.array([179, 27, 255])
+  lower= np.array([114, 0, 202])
+  upper = np.array([161, 17, 255])
   mask = cv2.inRange(hsv, lower, upper)
 
   # Remove noise
