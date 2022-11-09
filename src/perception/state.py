@@ -10,17 +10,22 @@ OBSTACLE_THRESHOLD = 0.3
 OBSTACLE_DETECTED_CYCLE_THRESHOLD = 10
 
 class State:
-    def __init__(self, world_map : Map, control_panel):
+    def __init__(self, world_map : Map, control_panel, system_clock, debug):
         self.theta = 0
         self.x = 0
         self.y = 0
         self.world_map = world_map
         self.node = 0
+
+        self.debug = debug
         
         self.obstacle_detected = False
         self.obstacle_detected_cycle_count = 0
 
         self.control_panel = control_panel
+
+        self.system_clock = system_clock
+        self.clock_id = system_clock.get_id()
 
     def update(self, perception : Perception) -> None:
         if self.control_panel.reset_flag:
@@ -29,9 +34,12 @@ class State:
             self.theta = self.control_panel.reset_values[2]
             self.control_panel.reset_flag = False
 
-        self.theta += perception.angular_speed * TIMESTEP 
-        self.x += perception.linear_speed * cos(self.theta) * TIMESTEP 
-        self.y += perception.linear_speed * sin(self.theta) * TIMESTEP 
+        elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.clock_id)
+        if self.debug:
+            print("Elapsed time since last localization update: %.3f ms" % (100*elapsed_time)) 
+        self.theta += perception.angular_speed * elapsed_time 
+        self.x += perception.linear_speed * cos(self.theta) * elapsed_time 
+        self.y += perception.linear_speed * sin(self.theta) * elapsed_time 
 
         self.node = self.world_map.get_closest_node(self.node, self.x, self.y)
 

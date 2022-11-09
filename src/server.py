@@ -5,6 +5,7 @@ from control import MockCommandFactory
 from threading import Thread
 from robot import ControlPanel, Robot
 from config import Configs
+from clock import SystemClock
 
 from infrastructure import ArduinoSensors, ArduinoCommandFactory, Arduino
 
@@ -30,6 +31,7 @@ world_map.add_edge(0, 1)
 debug = args.debug
 # Build sensors and decision making
 control_panel = ControlPanel()
+system_clock = SystemClock()
 
 sensors = MockSensors(debug=debug)
 command_factory = MockCommandFactory()
@@ -42,7 +44,7 @@ sensing = Sensing(sensors)
 decision_making = DecisionMaking(command_factory, debug=debug)
 
 # Instantiate the robot
-robot = Robot(sensing, decision_making, world_map, control_panel)
+robot = Robot(sensing, decision_making, world_map, control_panel, system_clock)
 
 # Listen to network communication
 if args.no_network:
