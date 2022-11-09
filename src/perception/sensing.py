@@ -1,7 +1,7 @@
 from .perception import Perception
 from .preprocessing_image import preprocessing_image
 
-WHEEL_DIST = 14 # centimeters
+WHEEL_DIST = 15 # centimeters
 
 class Sensing:
     def __init__(self, sensors, system_clock, debug=False):
