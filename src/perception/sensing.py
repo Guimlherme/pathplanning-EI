@@ -6,19 +6,24 @@ class Sensing:
         self.sensors = sensors
         self.debug = debug
 
-    def collect(self) -> Perception:
+    def collect(self, perception):
         if self.debug:
             print("Collecting from sensors")
-        
-        image = self.sensors.camera_shot()
-        line_angle = preprocessing_image(image)
 
         right_encoder = self.sensors.right_encoder()
         left_encoder = self.sensors.left_encoder()
 
         linear_speed = right_encoder # TODO: change
         angular_speed = right_encoder # TODO: change
-
         object_distance = self.sensors.ultrassound_distance()
 
-        return Perception(line_angle, linear_speed, angular_speed, object_distance)
+        perception.set_angular_speed(angular_speed)
+        perception.set_linear_speed(linear_speed)
+        perception.set_obstacle_distance(object_distance)
+
+    def collect_vision(self, perception):
+        print("Collecting from vision")
+            
+        image = self.sensors.camera_shot()
+        line_angle = preprocessing_image(image)
+        perception.set_line_angle(line_angle)

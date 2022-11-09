@@ -33,7 +33,7 @@ debug = args.debug
 control_panel = ControlPanel()
 system_clock = SystemClock()
 
-sensors = MockSensors(debug=debug)
+sensors = MockSensors(system_clock, debug=debug)
 command_factory = MockCommandFactory()
 if not args.mock:
     arduino = Arduino()
@@ -55,14 +55,7 @@ else:
     network_thread.start()
 
 # Main loop
-count = 0
-while True:
-    if count == 100:
-        control_panel.print()
-        count = 0
-    if control_panel.run:
-        robot.run()
-    count += 1
+robot.run()
 
 # Finalizing
 if not args.no_network:

@@ -24,7 +24,8 @@ class Forward(Command):
         self.line_angle = angle
 
     def execute(self):
-        print("Forward")
+        # print("Forward")
+        pass
     
     def get_name(self):
         return "Forward"

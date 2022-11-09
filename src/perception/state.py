@@ -36,7 +36,7 @@ class State:
 
         elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.clock_id)
         if self.debug:
-            print("Elapsed time since last localization update: %.3f ms" % (100*elapsed_time)) 
+            print("Elapsed time since last localization update: %.3f ms" % (1000*elapsed_time)) 
         self.theta += perception.angular_speed * elapsed_time 
         self.x += perception.linear_speed * cos(self.theta) * elapsed_time 
         self.y += perception.linear_speed * sin(self.theta) * elapsed_time 
