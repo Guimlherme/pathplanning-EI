@@ -42,5 +42,14 @@ class ArduinoSensors:
         return d
 
     def ultrassound_distance(self):
-        # TODO get correct value
-        return 0.4
+        write_order(self.arduino.serial_file, Order.READULTRASOUND)
+        while True:
+            try:
+                u = read_i16(self.arduino.serial_file)
+                break
+            except struct.error:
+                pass
+            except TimeoutError:
+                write_order(self.arduino.serial_file, Order.READULTRASOUND)
+                pass
+        return u
