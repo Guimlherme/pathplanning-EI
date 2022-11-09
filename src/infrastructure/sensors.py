@@ -1,5 +1,6 @@
 from .robust_serial import write_order, Order, write_i8, write_i16, read_i16, read_i32, read_i8
 from .robust_serial.utils import open_serial_port
+import struct
 
 import perception
 import numpy as np 
