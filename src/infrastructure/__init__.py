@@ -1,3 +1,3 @@
 from .sensors import ArduinoSensors
-from .commands import ArduinoCommandFactory
+from .actuators import ArduinoActuators
 from .arduino import Arduino

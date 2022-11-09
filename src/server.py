@@ -1,13 +1,14 @@
 from perception import State, Map, Sensing
-from decision_making import DecisionMaking
+from decision_making import DecisionMaking, SimpleDecisionMaking
 from communication import Network
 from threading import Thread
 from robot import ControlPanel, Robot
 from config import Configs
 from clock import SystemClock
+from command import CommandFactory
 
-from infrastructure import Arduino, ArduinoSensors, ArduinoCommandFactory
-from infrastructure.mock import MockSensors, MockCommandFactory
+from infrastructure import Arduino, ArduinoSensors, ArduinoActuators
+from infrastructure.mock import MockSensors, MockActuators
 
 import argparse
 
@@ -34,15 +35,16 @@ control_panel = ControlPanel()
 system_clock = SystemClock()
 
 sensors = MockSensors(system_clock, debug=debug)
-command_factory = MockCommandFactory()
+actuators = MockActuators()
 if not args.mock:
     arduino = Arduino()
     arduino.connect()
+    actuators = ArduinoActuator(arduino)
     sensors = ArduinoSensors(arduino, debug=debug)
-    command_factory = ArduinoCommandFactory(arduino)
 
+command_factory = CommandFactory(actuators)
 sensing = Sensing(sensors)
-decision_making = DecisionMaking(command_factory, debug=debug)
+decision_making = SimpleDecisionMaking(command_factory, debug=debug)
 
 # Instantiate the robot
 robot = Robot(sensing, decision_making, world_map, control_panel, system_clock)
