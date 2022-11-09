@@ -38,7 +38,7 @@ class Forward(Command):
         self.actuators = actuators
 
     def execute(self):
-        self.actuators.set_speeds(1, 1)
+        self.actuators.set_speeds(0.8, 0.8)
     
     def get_name(self):
         return "Forward"

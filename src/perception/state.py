@@ -4,7 +4,7 @@ from .map import Map
 from math import sin, cos, pi
 
 # An obstacle is considered as detected if it is closer than OBSTACLE_THRESHOLD for at least OBSTACLE_CYCLE_THRESHOLD cycles
-OBSTACLE_THRESHOLD = 30
+OBSTACLE_THRESHOLD = 50
 OBSTACLE_DETECTED_CYCLE_THRESHOLD = 10
 
 class State:

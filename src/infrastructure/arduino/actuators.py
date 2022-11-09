@@ -2,7 +2,7 @@ from .robust_serial import write_order, Order, write_i8, write_i16, read_i16, re
 from time import sleep
 from command import Actuator
 
-motor_speed=50
+motor_speed=100
 
 class ArduinoActuators(Actuator):
     def __init__(self, arduino):
