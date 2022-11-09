@@ -1,5 +1,5 @@
 from math import sqrt
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 class Map:
     def __init__(self):
@@ -33,13 +33,13 @@ class Map:
 
         return min_dist_node
 
-    # def print(self):
-    #     plt.figure()
-    #     for node in self.nodes:
-    #         plt.scatter(*self.nodes[node], c='#0000FF')
-    #         for neighbor in self.adjacency_list[node]:
-    #             print(self.nodes[node][0])
-    #             plt.plot([self.nodes[node][0], self.nodes[neighbor][0]],[self.nodes[node][1], self.nodes[neighbor][1]], c='#FF0000')
-    #     plt.show()
+    def print(self):
+        plt.figure()
+        for node in self.nodes:
+            plt.scatter(*self.nodes[node], c='#0000FF')
+            for neighbor in self.adjacency_list[node]:
+                print(self.nodes[node][0])
+                plt.plot([self.nodes[node][0], self.nodes[neighbor][0]],[self.nodes[node][1], self.nodes[neighbor][1]], c='#FF0000')
+        plt.show()
 
 
