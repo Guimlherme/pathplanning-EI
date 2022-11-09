@@ -15,6 +15,7 @@ enum Order {
   READENCODERr = 7,
   READENCODERl = 8,
   RESETENC = 9,
+  READULTRASOUND = 10,
 };
 
 typedef enum Order Order;

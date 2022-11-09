@@ -75,16 +75,12 @@ void SensorSetup(){
    }
 }
 
-int MeasureDistance(){        // a low pull on pin COMP/TRIG  triggering a sensor reading
-    digitalWrite(URTRIG, LOW);
-    digitalWrite(URTRIG, HIGH);               // reading Pin PWM will output pulses
-    unsigned long distance=pulseIn(URPWM,LOW);
-    if(distance==50000){              // the reading is invalid.
-      Serial.print("Invalid");
-    }else{
-      distance=distance/50;           // every 50us low level stands for 1cm
-    }
-    return distance;
+int MeasureDistance(){               // a low pull on pin COMP/TRIG  triggering a sensor reading
+  digitalWrite(URTRIG, LOW);
+  digitalWrite(URTRIG, HIGH);      // reading Pin PWM will output pulses
+  unsigned long distance = pulseIn(URPWM,LOW);
+  distance = distance/50;          // every 50us low level stands for 1cm
+  return distance;
 }
 
 void loop()
@@ -219,9 +215,14 @@ void get_messages_from_serial()
           coder[RIGHT] = 0;
           break; 
         }
+        case READULTRASOUND:
+        {
+          write_i16(MeasureDistance());
+          break;
+        }
 
-  	// Unknown order
-  	default:
+        // Unknown order
+        default:
           //write_order(ERROR);
           //write_i32(404);
   	  return;
