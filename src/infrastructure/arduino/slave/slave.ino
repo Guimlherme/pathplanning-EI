@@ -78,7 +78,7 @@ void SensorSetup(){
 int MeasureDistance(){        // a low pull on pin COMP/TRIG  triggering a sensor reading
     digitalWrite(URTRIG, LOW);
     digitalWrite(URTRIG, HIGH);               // reading Pin PWM will output pulses
-    unsigned long distance=pulseIn(URPWM,LOW,10000);
+    long distance=pulseIn(URPWM,LOW,10000);
     if(distance==50000 || distance == 0){              // the reading is invalid.
       Serial.print("Invalid");
     }else{
@@ -221,7 +221,7 @@ void get_messages_from_serial()
         }
         case READULTRASOUND:
         {
-          write_i16(MeasureDistance());
+          write_i32(MeasureDistance());
         }
 
         // Unknown order

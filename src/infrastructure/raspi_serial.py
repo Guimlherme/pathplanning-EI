@@ -216,7 +216,7 @@ def process_cmd(cmd):
         write_order(serial_file, Order.SERVO)
         write_i16(serial_file, 90) #valeur angle servo
     elif cmd_type["[u]ltrasound"]:
-        print('ULtrasound : ', lectureUltrasound())
+        print('Ultrasound : ', lectureUltrasound())
     else:
         print("Invalid command")
 
@@ -252,7 +252,7 @@ def lectureUltrasound():
     write_order(serial_file, Order.READULTRASOUND)
     while True:
        try:
-           u = read_i16(serial_file)
+           u = read_i32(serial_file)
            break
        except struct.error:
            pass
