@@ -41,7 +41,7 @@ sensors = MockSensors(system_clock, debug=debug)
 actuators = MockActuators()
 if not args.mock:
     arduino = Arduino()
-    # arduino.connect()
+    arduino.connect()
     actuators = ArduinoActuators(arduino)
     sensors = ArduinoSensors(arduino, debug=debug)
 
