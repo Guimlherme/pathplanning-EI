@@ -1,7 +1,7 @@
 from .perception import Perception
 from .map import Map
 
-from math import sin, cos
+from math import sin, cos, pi
 
 TIMESTEP = 60e-3 #60ms
 
@@ -39,6 +39,7 @@ class State:
 
         elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.clock_id)
         self.theta += perception.angular_speed * elapsed_time 
+        self.theta %= 2*pi
         self.x += perception.linear_speed * cos(self.theta) * elapsed_time 
         self.y += perception.linear_speed * sin(self.theta) * elapsed_time 
         

@@ -1,5 +1,6 @@
 import numpy as np
 import command
+from math import pi
 
 # SimpleDecisionMaking only go forward and does a half turn when finds an obstacle. Ignores intersection and path planning
 class DecisionMaking:
@@ -29,7 +30,7 @@ class ForwardState:
         if state.position_is(target):
             return StoppedState(self.command_factory)
         elif state.obstacle_detected:
-            return TurnState(self.command_factory, state, np.rad2deg(90))
+            return TurnState(self.command_factory, state, np.deg2rad(90))
         return None
 
 class StoppedState:
@@ -54,6 +55,9 @@ class TurnState:
         return self.command_factory.turn(command.RIGHT)
 
     def check_transition(self, state, target, perception):
-        if abs( (state.theta - self.initial_theta) - self.angle)  < np.deg2rad(3):
+        if angle_diference(state.theta, self.initial_theta)  < np.deg2rad(10):
             return ForwardState(self.command_factory)
         return None
+
+def angle_diference(x, y):
+    return (y-x) % (2*pi)

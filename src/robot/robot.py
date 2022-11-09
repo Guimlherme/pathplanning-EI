@@ -2,7 +2,7 @@ from perception import State, Map, Perception
 from threading import Thread
 import time
 
-CYCLE_TIME = 0.015 #in seconds
+CYCLE_TIME = 0.005 #in seconds
 
 class Robot:
     def __init__(self, sensing, decision_making, world_map, control_panel, system_clock, network, command_factory):
