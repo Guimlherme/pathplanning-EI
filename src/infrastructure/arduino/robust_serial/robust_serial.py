@@ -20,6 +20,7 @@ class Order(Enum):
     READENCODERr = 7
     READENCODERl = 8
     RESETENC = 9
+    READULTRASOUND = 10
 
 def read_order(f):
     """
@@ -122,6 +123,10 @@ def decode_order(f, byte, debug=True):
             msg = "READ_L"
             encoderR = read_i16(f)
             msg = encoderR
+        elif order == Order.READULTRASOUND:
+            msg = "READ_US"
+            us = read_i16(f)
+            msg = us
         else:
             msg = ""
             print("Unknown Order", byte)
