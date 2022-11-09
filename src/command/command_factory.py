@@ -1,4 +1,4 @@
-from .command import Forward, Stopped, HalfTurn
+from .command import Forward, Stopped, Turn
 
 class CommandFactory:
     def __init__(self, actuators):
@@ -10,5 +10,5 @@ class CommandFactory:
     def forward(self, line_angle):
         return Forward(self.actuators, line_angle)
 
-    def half_turn(self):
-        return HalfTurn(self.actuators)
+    def turn(self, side):
+        return Turn(self.actuators, side)

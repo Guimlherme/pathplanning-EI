@@ -42,11 +42,11 @@ class Arduino:
             byte = bytes_array[0]
             if byte in [Order.HELLO.value, Order.ALREADY_CONNECTED.value]:
                 is_connected = True
-
         time.sleep(2)
         c = 1
         while (c!=b''):
             c = self.serial_file.read(1)
+        print("Arduino connected!")
 
 
     def readLeftEncoder(self):

@@ -1,5 +1,5 @@
 from perception import State, Map, Sensing
-from decision_making import DecisionMaking, SimpleDecisionMaking
+from decision_making.sm_decision_making import DecisionMaking
 from communication import Network
 from threading import Thread
 from robot import ControlPanel, Robot
@@ -48,7 +48,7 @@ if not args.mock:
 # Build remaining dependencies
 command_factory = CommandFactory(actuators)
 sensing = Sensing(sensors)
-decision_making = SimpleDecisionMaking(command_factory, debug=debug)
+decision_making = DecisionMaking(command_factory, debug=debug)
 network = Network(control_panel, configs)
 
 # Instantiate the robot

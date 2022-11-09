@@ -1,1 +1,1 @@
-from .decision_making import DecisionMaking, SimpleDecisionMaking
+from .decision_making import DecisionMaking

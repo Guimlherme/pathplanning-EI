@@ -1,3 +1,3 @@
-from .command import Command
+from .command import Command, RIGHT, LEFT
 from .command_factory import CommandFactory
 from .actuator import Actuator
