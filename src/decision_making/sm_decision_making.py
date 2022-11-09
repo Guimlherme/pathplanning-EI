@@ -54,6 +54,6 @@ class TurnState:
         return self.command_factory.turn(command.RIGHT)
 
     def check_transition(self, state, target, perception):
-        if abs( (state.theta - self.initial_theta) - self.angle)  < np.rad2deg(3):
+        if abs( (state.theta - self.initial_theta) - self.angle)  < np.deg2rad(3):
             return ForwardState(self.command_factory)
         return None
