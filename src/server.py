@@ -1,4 +1,4 @@
-from perception import MockSensors, State, Map
+from perception import MockSensors, State, Map, Sensing
 from decision_making import DecisionMaking
 from communication import Network
 from control import MockCommandFactory
@@ -38,10 +38,11 @@ if not args.mock:
     sensors = ArduinoSensors(arduino, debug=debug)
     command_factory = ArduinoCommandFactory(arduino, debug=debug)
 
+sensing = Sensing(sensors)
 decision_making = DecisionMaking(command_factory, debug=debug)
 
 # Instantiate the robot
-robot = Robot(sensors, decision_making, world_map, control_panel)
+robot = Robot(sensing, decision_making, world_map, control_panel)
 
 # Listen to network communication
 if args.no_network:

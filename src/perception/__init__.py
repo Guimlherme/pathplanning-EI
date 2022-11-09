@@ -1,4 +1,5 @@
-from .sensors import Sensors, MockSensors
+from .sensors import MockSensors
+from .sensing import Sensing
 from .state import State
 from .map import Map
 
