@@ -7,19 +7,22 @@ from config import Configs
 from clock import SystemClock
 from command import CommandFactory
 
-from infrastructure import Arduino, ArduinoSensors, ArduinoActuators
+from infrastructure.arduino import Arduino, ArduinoSensors, ArduinoActuators
 from infrastructure.mock import MockSensors, MockActuators
 
 import argparse
 
-# Parse flag
+# Parse flags
 parser = argparse.ArgumentParser(
     prog = 'AutoSync Server',
     description = 'Server for autosync robot.')
-parser.add_argument('-nn', '--no_network', action='store_true')
+parser.add_argument('-r', '--run', action='store_true')
 parser.add_argument('-m', '--mock', action='store_true')
 parser.add_argument('-d', '--debug', action='store_true')
 args = parser.parse_args()
+
+debug = args.debug
+should_run = args.run
 
 configs = Configs()
 
@@ -29,38 +32,26 @@ world_map.add_node(0, 0, 0)
 world_map.add_node(1, 1, 0)
 world_map.add_edge(0, 1)
 
-debug = args.debug
-# Build sensors and decision making
-control_panel = ControlPanel()
+# Build control panel and system clock
+control_panel = ControlPanel(should_run)
 system_clock = SystemClock()
 
+# Build sensors and actuators
 sensors = MockSensors(system_clock, debug=debug)
 actuators = MockActuators()
 if not args.mock:
     arduino = Arduino()
-    arduino.connect()
-    actuators = ArduinoActuator(arduino)
+    # arduino.connect()
+    actuators = ArduinoActuators(arduino)
     sensors = ArduinoSensors(arduino, debug=debug)
 
+# Build remaining dependencies
 command_factory = CommandFactory(actuators)
 sensing = Sensing(sensors)
 decision_making = SimpleDecisionMaking(command_factory, debug=debug)
+network = Network(control_panel, configs)
 
 # Instantiate the robot
-robot = Robot(sensing, decision_making, world_map, control_panel, system_clock)
-
-# Listen to network communication
-if args.no_network:
-    control_panel.run = True
-else:
-    network = Network(control_panel, configs)
-    network_thread = Thread(target=network.read)
-    network_thread.start()
-
-# Main loop
+robot = Robot(sensing, decision_making, world_map, control_panel, system_clock, network)
 robot.run()
-
-# Finalizing
-if not args.no_network:
-    network_thread.join()
            

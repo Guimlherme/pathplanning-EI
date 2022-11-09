@@ -1,10 +1,12 @@
 import socket
+import signal
 
 class Network:
     def __init__(self, control_panel, config):
         self.control_panel = control_panel
         self.config = config
         self.start_server()
+        self.shutdown = False
 
     def start_server(self):
         host = self.config.get_setting('host')
@@ -21,7 +23,8 @@ class Network:
         self.server_socket.listen(1)
         conn, address = self.server_socket.accept() 
         print("Connection from: " + str(address))
-        while True:
+        
+        while not self.shutdown:
             data = conn.recv(1024).decode()
             if not data:
                 break # if data is not received break
@@ -29,6 +32,7 @@ class Network:
             result = self.parse(data)
             conn.send(result.encode()) 
         conn.close() 
+
     
     def parse(self, data):
         commands = data.split(' ')

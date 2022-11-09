@@ -3,8 +3,8 @@ class ControlPanel:
     ControlPanel implements variables that are never changed nor measured by the robot, 
     but rather imposedby the administrator. For instance, they can be received through 
     the network module.'''
-    def __init__(self):
-        self.run = False
+    def __init__(self, should_run):
+        self.run = should_run
         self.target = (0, 0)
         self.reset_flag = False
     

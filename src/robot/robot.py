@@ -5,7 +5,7 @@ import time
 CYCLE_TIME = 0.030 #in seconds
 
 class Robot:
-    def __init__(self, sensing, decision_making, world_map, control_panel, system_clock):
+    def __init__(self, sensing, decision_making, world_map, control_panel, system_clock, network):
         self.sensing = sensing
         self.decision_making = decision_making
         self.state = State(world_map, control_panel, system_clock, debug=True)
@@ -13,15 +13,18 @@ class Robot:
         self.perception = Perception(0, 0, 0, 0)
         self.shutdown = False
         self.system_clock = system_clock
+        self.network = network
     
     def run(self):
         vision_thread = Thread(target=self.run_vision)
+        network_thread = Thread(target=self.network.read)
         remaining_thread = Thread(target=self.run_everything)
 
         vision_thread.start()
+        network_thread.start()
         remaining_thread.start()
 
-        self._wait([vision_thread, remaining_thread])
+        self._wait([vision_thread, network_thread, remaining_thread])
 
     def _wait(self, threads):
         try:
@@ -30,6 +33,7 @@ class Robot:
         except KeyboardInterrupt:
             print("attempting to close threads")
             self.shutdown = True
+            self.network.shutdown = True
             for thread in threads:
                 thread.join()
             print ("threads successfully closed")

@@ -1,3 +1,5 @@
+import numpy as np
+
 class DecisionMaking:
     def __init__(self, command_factory, debug=False):
         self.command_factory = command_factory
@@ -12,16 +14,28 @@ class DecisionMaking:
 
         next_waypoint = self.plan(state, target)
 
-        if need_halfturn:
+        if self.need_half_turn(state, next_waypoint):
             return self.command_factory.half_turn()
 
         # No half turn: just follow line towards waypoint
         if state.intersection_detected():
-            return 
+            return self.command_factory.forward(perception.line_angle)
         else:
             return self.command_factory.forward(perception.line_angle)
             
         return None
+
+    def need_half_turn(self, state, waypoint):
+        posR = np.array([state.x, state.y])
+        posW = np.array(waypoint)
+        v1 = np.array([np.cos(theta), np.sin(theta)])
+        v2 = waypoint - posR
+        product = np.dot(v1, v2)
+        return product < 0
+
+    def plan(self, state, target):
+        # TODO: Pathplanning
+        return [1, 2]
 
 # SimpleDecisionMaking only go forward and does a half turn when finds an obstacle. Ignores intersection and path planning
 class SimpleDecisionMaking:
