@@ -46,67 +46,9 @@ class Arduino:
         c = 1
         while (c!=b''):
             c = self.serial_file.read(1)
+        self.resetEncoders()
         print("Arduino connected!")
 
-
-    def readLeftEncoder(self):
-        write_order(serial_file, Order.READENCODERl)
-        while True:
-            try:
-                g = read_i16(serial_file)
-                break
-            except struct.error:
-                pass
-            except TimeoutError:
-                write_order(serial_file, Order.READENCODERl)
-                pass
-        return g
-
-    def readRightEncoder(self):
-        write_order(serial_file, Order.READENCODERr)
-        while True:
-            try:
-                d = read_i16(serial_file)
-                break
-            except struct.error:
-                pass
-            except TimeoutError:
-                write_order(serial_file, Order.READENCODERr)
-                pass
-        return d
-
-    def readUltrasound(self):
-        write_order(serial_file, Order.READULTRASOUND)
-        while True:
-            try:
-                u = read_i32(serial_file)
-                break
-            except struct.error:
-                pass
-            except TimeoutError:
-                write_order(serial_file, Order.READULTRASOUND)
-                pass
-        return u
-
     def resetEncoders(self):
-        write_order(serial_file, Order.RESETENC)
-
-    def setLeftMotorSpeed(self, cmd):
-        self.left_motor_speed = int(cmd)
-        write_order(serial_file, Order.MOTOR)
-        write_i8(serial_file, self.right_motor_speed)  # valeur moteur droit
-        write_i8(serial_file, self.left_motor_speed)  # valeur moteur gauche
-
-
-    def setRightMotorSpeed(self, cmd):
-        self.right_motor_speed = int(cmd)
-        write_order(serial_file, Order.MOTOR)
-        write_i8(serial_file, self.right_motor_speed)  # valeur moteur droit
-        write_i8(serial_file, self.left_motor_speed)  # valeur moteur gauche
-
-    def stopMotors(self):
-        self.left_motor_speed = 0
-        self.right_motor_speed = 0
-        write_order(serial_file, Order.STOP)
-
+        write_order(self.serial_file, Order.RESETENC)
 

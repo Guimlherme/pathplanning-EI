@@ -8,7 +8,7 @@ class ArduinoActuators(Actuator):
     def __init__(self, arduino):
         self.arduino = arduino
 
-    def set_speeds(self, left, right):
+    def set_speeds(self, right, left):
         write_order(self.arduino.serial_file, Order.MOTOR)
-        write_i8(self.arduino.serial_file, left*motor_speed) #valeur moteur droit
-        write_i8(self.arduino.serial_file, right*motor_speed) #valeur moteur gauche
+        write_i8(self.arduino.serial_file, right*motor_speed) #valeur moteur droit
+        write_i8(self.arduino.serial_file, left*motor_speed) #valeur moteur gauche

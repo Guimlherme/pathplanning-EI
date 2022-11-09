@@ -25,9 +25,9 @@ class Turn(Command):
 
     def execute(self):
         if self.side == RIGHT:
-            self.actuators.set_speeds(0, 1)
-        else:
             self.actuators.set_speeds(1, 0)
+        else:
+            self.actuators.set_speeds(0, 1)
 
     def get_name(self):
         return "Turn"
