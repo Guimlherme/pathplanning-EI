@@ -34,6 +34,10 @@ class Sensing:
         perception.set_angular_speed(angular_speed)
         perception.set_linear_speed(linear_speed)
         perception.set_obstacle_distance(object_distance)
+        if self.debug:
+            print("Encoders: ", right_encoder, left_encoder)
+            print("Wheel Speeds: ", right_speed, left_speed)
+            print("Linear and angular Speeds: ", linear_speed, angular_speed)
 
     def collect_vision(self, perception):
         # print("Collecting from vision")
