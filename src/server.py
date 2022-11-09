@@ -52,6 +52,6 @@ decision_making = SimpleDecisionMaking(command_factory, debug=debug)
 network = Network(control_panel, configs)
 
 # Instantiate the robot
-robot = Robot(sensing, decision_making, world_map, control_panel, system_clock, network)
+robot = Robot(sensing, decision_making, world_map, control_panel, system_clock, network, command_factory)
 robot.run()
            

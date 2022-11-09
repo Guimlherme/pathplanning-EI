@@ -6,9 +6,6 @@ class DecisionMaking:
         self.debug = debug
 
     def decide(self, state, target, perception):
-        if self.debug:
-            print("Running decision making")
-
         if state.position_is(target):
             return self.command_factory.stopped()
 
@@ -44,9 +41,6 @@ class SimpleDecisionMaking:
         self.debug = debug
 
     def decide(self, state, target, perception):
-        if self.debug:
-            print("Running decision making")
-
         if state.position_is(target):
             command = self.command_factory.stopped()
         elif state.obstacle_detected:
@@ -55,5 +49,5 @@ class SimpleDecisionMaking:
             command = self.command_factory.forward(perception.line_angle)
 
         if self.debug:
-            print("Decided command", command.get_name())
+            print("Decision Making:", command.get_name())
         return command

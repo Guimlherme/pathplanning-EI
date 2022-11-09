@@ -7,9 +7,6 @@ class Sensing:
         self.debug = debug
 
     def collect(self, perception):
-        if self.debug:
-            print("Collecting from sensors")
-
         right_encoder = self.sensors.right_encoder()
         left_encoder = self.sensors.left_encoder()
 

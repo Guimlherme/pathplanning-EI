@@ -5,7 +5,7 @@ import time
 CYCLE_TIME = 0.015 #in seconds
 
 class Robot:
-    def __init__(self, sensing, decision_making, world_map, control_panel, system_clock, network):
+    def __init__(self, sensing, decision_making, world_map, control_panel, system_clock, network, command_factory):
         self.sensing = sensing
         self.decision_making = decision_making
         self.state = State(world_map, control_panel, system_clock, debug=True)
@@ -14,6 +14,7 @@ class Robot:
         self.shutdown = False
         self.system_clock = system_clock
         self.network = network
+        self.command_factory = command_factory
     
     def run(self):
         vision_thread = Thread(target=self.run_vision)
@@ -48,6 +49,8 @@ class Robot:
             _ = self.system_clock.get_elapsed_time_since_last_call(clock_id) # mark first call
             if self.control_panel.run:
                 self.execute_cycle()
+            else:
+                self.command_factory.stopped().execute()
             elapsed_time = self.system_clock.get_elapsed_time_since_last_call(clock_id) # get elapsed time
             remaining_time = CYCLE_TIME - elapsed_time
             if remaining_time > 0:
