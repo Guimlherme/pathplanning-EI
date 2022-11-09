@@ -1,17 +1,34 @@
 from .perception import Perception
 from .preprocessing_image import preprocessing_image
 
+WHEEL_DIST = 14 # centimeters
+
 class Sensing:
-    def __init__(self, sensors, debug=False):
+    def __init__(self, sensors, system_clock, debug=False):
         self.sensors = sensors
         self.debug = debug
 
+        self.system_clock = system_clock
+        self.clock_id = system_clock.get_id()
+
+        self.right_encoder_previous = 0
+        self.left_encoder_previous = 0
+
     def collect(self, perception):
+        elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.clock_id)
+
         right_encoder = self.sensors.right_encoder()
         left_encoder = self.sensors.left_encoder()
 
-        linear_speed = right_encoder # TODO: change
-        angular_speed = right_encoder # TODO: change
+        right_speed = (right_encoder - self.right_encoder_previous)/elapsed_time
+        left_speed = (left_encoder - self.left_encoder_previous)/elapsed_time
+
+        self.right_encoder_previous = right_encoder
+        self.left_encoder_previous = left_encoder
+
+        linear_speed = (right_speed + left_speed)/2
+        angular_speed = (right_speed - left_speed)/WHEEL_DIST
+
         object_distance = self.sensors.ultrassound_distance()
 
         perception.set_angular_speed(angular_speed)
