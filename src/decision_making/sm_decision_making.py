@@ -60,4 +60,5 @@ class TurnState:
         return None
 
 def angle_diference(x, y):
-    return (y-x) % (2*pi)
+    diff = y - x
+    return min ( diff % (2*pi), (- diff) % (2*pi))
