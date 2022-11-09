@@ -34,6 +34,9 @@ class State:
             self.theta = self.control_panel.reset_values[2]
             self.control_panel.reset_flag = False
 
+        if self.debug:
+            print("Previous Localization (x, y, theta) = ", self.x, self.y, self.theta)
+
         elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.clock_id)
         self.theta += perception.angular_speed * elapsed_time 
         self.x += perception.linear_speed * cos(self.theta) * elapsed_time 

@@ -47,7 +47,7 @@ if not args.mock:
 
 # Build remaining dependencies
 command_factory = CommandFactory(actuators)
-sensing = Sensing(sensors, system_clock)
+sensing = Sensing(sensors, system_clock, debug=True)
 decision_making = DecisionMaking(command_factory, debug=debug)
 network = Network(control_panel, configs)
 
