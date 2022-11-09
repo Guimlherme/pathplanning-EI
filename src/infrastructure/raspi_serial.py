@@ -257,7 +257,7 @@ def lectureUltrasound():
        except struct.error:
            pass
        except TimeoutError:
-           write_order(serial_file, Order.READENCODERr)
+           write_order(serial_file, Order.READULTRASOUND)
            pass
     return u
 
