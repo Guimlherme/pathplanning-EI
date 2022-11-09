@@ -6,7 +6,7 @@ from math import sin, cos
 TIMESTEP = 60e-3 #60ms
 
 # An obstacle is considered as detected if it is closer than OBSTACLE_THRESHOLD for at least OBSTACLE_CYCLE_THRESHOLD cycles
-OBSTACLE_THRESHOLD = 0.3
+OBSTACLE_THRESHOLD = 30
 OBSTACLE_DETECTED_CYCLE_THRESHOLD = 10
 
 class State:
