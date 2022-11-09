@@ -51,11 +51,15 @@ class TurnState:
         self.initial_theta = state.theta
         self.command_factory = command_factory
 
+        self.finished_turning = False
+
     def execute(self, state, target, perception):
         return self.command_factory.turn(command.RIGHT)
 
     def check_transition(self, state, target, perception):
         if angle_diference(state.theta, self.initial_theta)  < np.deg2rad(10):
+            self.finished_turning = True
+        if self.finished_turning and not state.obstacle_detected:
             return ForwardState(self.command_factory)
         return None
 
