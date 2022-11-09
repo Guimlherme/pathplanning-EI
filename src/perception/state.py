@@ -38,10 +38,7 @@ class State:
         self.theta += perception.angular_speed * elapsed_time 
         self.x += perception.linear_speed * cos(self.theta) * elapsed_time 
         self.y += perception.linear_speed * sin(self.theta) * elapsed_time 
-        if self.debug:
-            print("Elapsed time since last localization update: %.3f ms" % (1000*elapsed_time)) 
-            print("Localization (x, y, theta) = ", self.x, self.y, self.theta)
-
+        
         self.node = self.world_map.get_closest_node(self.node, self.x, self.y)
 
         if perception.obstacle_distance < OBSTACLE_THRESHOLD:
@@ -51,6 +48,12 @@ class State:
                 self.obstacle_detected = True
         else:
             self.obstacle_detected = False
+        
+        if self.debug:
+            print("Elapsed time since last localization update: %.3f ms" % (1000*elapsed_time)) 
+            print("Localization (x, y, theta) = ", self.x, self.y, self.theta)
+            print("Object distance: ", perception.obstacle_distance, " obstacle detected = ", self.obstacle_detected)
+
     
     def position_is(self, target) -> bool:
         return self.x == target[0] and self.y == target[1]
