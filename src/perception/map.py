@@ -1,5 +1,6 @@
 from math import sqrt
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 
 class Map:
     def __init__(self):
@@ -45,5 +46,18 @@ class Map:
                 # print(self.nodes[node][0])
                 plt.plot([self.nodes[node][0], self.nodes[neighbor][0]],[self.nodes[node][1], self.nodes[neighbor][1]], c='#FF0000')
         plt.show()
+
+    def print_with_robot(self, state):
+        self.print()
+        width = 0.25
+        height = 0.5
+        plt.gca().add_patch(Rectangle((state.x-width/2, state.y-height/2), width, height,
+                                      angle=state.theta,
+                                      edgecolor='red',
+                                      facecolor='red',
+                                      lw=4,
+                                      rotation_point='center'))
+
+
 
 
