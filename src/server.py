@@ -1,5 +1,5 @@
 from perception import State, Sensing
-from decision_making.decision_making import DecisionMaking
+from decision_making.simple import DecisionMaking
 from communication import Network
 from threading import Thread
 from robot import ControlPanel, Robot

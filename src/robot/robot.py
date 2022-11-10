@@ -96,5 +96,5 @@ class Robot:
             self.history['localization_elapsed_time'].append(self.state.localization_elapsed_time)
             self.history['vision_elapsed_time'].append(self.state.vision_elapsed_time)
             self.history['object_distance'].append(self.state.obstacle_distance)
-            self.history['next_waypoint'].append(self.decision_making.next_waypoint)
+            # self.history['next_waypoint'].append(self.decision_making.next_waypoint)
             self.history['current_state'].append(self.decision_making.current_state.get_name())
