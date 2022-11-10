@@ -16,7 +16,7 @@ OMEGA_MAX = 10.00 # rad/s
 XI = 0.70
 WN = 6.00      # rad/s
 TAU = 0.600    # s
-TD = 0.015     # s - time of discretization
+TD = 0.050     # s - time of discretization
 
 CONTROL_PARAMETERS = {
      'phi':{'k':(2*(TAU-TD)*(WN**2))/(4+TD*WN*(4*XI+TAU*WN)),

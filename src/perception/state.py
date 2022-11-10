@@ -28,7 +28,8 @@ class State:
         self.control_panel = control_panel
 
         self.system_clock = system_clock
-        self.clock_id = system_clock.get_id()
+        self.localization_clock_id = system_clock.get_id()
+        self.vision_clock_id = system_clock.get_id()
 
         self.line_angle = 0
         self.linear_speed = 0
@@ -55,7 +56,7 @@ class State:
         if self.debug:
             print("Previous Localization (x, y, theta) = ", self.x, self.y, self.theta)
 
-        elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.clock_id)
+        elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.localization_clock_id)
 
         right_speed = np.sign(self.right_wheel_command) * (right_encoder - self.right_encoder_previous)/elapsed_time
         left_speed = np.sign(self.left_wheel_command) * (left_encoder - self.left_encoder_previous)/elapsed_time
@@ -80,8 +81,8 @@ class State:
             self.line_angle += self.angular_speed * elapsed_time
 
         self.obstacle_distance = obstacle_distance
-        self.elapsed_time = elapsed_time
-        
+        self.localization_elapsed_time = elapsed_time
+
         if obstacle_distance < OBSTACLE_THRESHOLD:
             if self.obstacle_detected_cycle_count < OBSTACLE_DETECTED_CYCLE_THRESHOLD:
                 self.obstacle_detected_cycle_count += 1
@@ -99,6 +100,8 @@ class State:
             print("Object distance: ", obstacle_distance, " obstacle detected = ", self.obstacle_detected)
 
     def update_vision(self, image):
+        elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.vision_clock_id)
+        self.vision_elapsed_time = elapsed_time      
         with self.lock: 
             self.line_angle = preprocessing_image(image)
             self.previous_line_angle = self.line_angle
