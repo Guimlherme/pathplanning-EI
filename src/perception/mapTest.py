@@ -20,8 +20,8 @@ class TestMap(unittest.TestCase):
 
     def test_get_closest(self):
         world_map = self.map_factory()
-        closest_node = world_map.get_closest_node(0, 0.1, 0.2)
+        closest_node = world_map.get_closest_neighbor(0, 0.1, 0.2)
         self.assertEqual(closest_node, 0)
-        closest_node = world_map.get_closest_node(0, 0.8, 0.2)
+        closest_node = world_map.get_closest_neighbor(0, 0.8, 0.2)
         self.assertEqual(closest_node, 1)
 

@@ -9,7 +9,7 @@ class DecisionMaking:
         self.debug = debug
         self.current_state = StoppedState(command_factory)
 
-    def decide(self, state, target, perception):
+    def decide(self, state, target, target_node, perception):
         command = self.current_state.execute(state, target, perception)
         next_state = self.current_state.check_transition(state, target, perception)
         if next_state is not None:

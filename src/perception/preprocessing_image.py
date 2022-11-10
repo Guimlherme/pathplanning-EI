@@ -32,8 +32,11 @@ def preprocessing_image(image,save_photos=False):
 
 
   # Find the different contours
-  _, contours, hierarchy = cv2.findContours(dilated_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
+  res = cv2.findContours(dilated_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+  if len(res) == 2:
+    contours, hierarchy = res
+  else:
+    _, contours, hierarchy = res
   # Sort by area (keep only the biggest one)
   contours = sorted(contours, key=cv2.contourArea, reverse=True)[:1]
 

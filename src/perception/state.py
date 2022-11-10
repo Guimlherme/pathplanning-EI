@@ -1,5 +1,6 @@
 from .perception import Perception
 from .map import Map
+from constants import DISTANCE_THRESHOLD
 
 from math import sin, cos, pi
 
@@ -41,7 +42,7 @@ class State:
         self.x += perception.linear_speed * cos(self.theta) * elapsed_time 
         self.y += perception.linear_speed * sin(self.theta) * elapsed_time 
         
-        self.node = self.world_map.get_closest_node(self.node, self.x, self.y)
+        self.node = self.world_map.get_closest_neighbor(self.node, self.x, self.y)
 
         if perception.obstacle_distance < OBSTACLE_THRESHOLD:
             if self.obstacle_detected_cycle_count < OBSTACLE_DETECTED_CYCLE_THRESHOLD:
@@ -58,8 +59,10 @@ class State:
 
     
     def position_is(self, target) -> bool:
-        return self.x == target[0] and self.y == target[1]
+        return abs(self.x - target[0]) < DISTANCE_THRESHOLD and abs(self.y - target[1]) < DISTANCE_THRESHOLD
     
     def intersection_detected(self) -> bool:
-        #  TODO: implement
+        for node, node_position in self.world_map.nodes.items():
+            if self.position_is(node_position):
+                return True
         return False

@@ -31,6 +31,9 @@ class Robot:
         self.system_clock = system_clock
         self.network = network
         self.command_factory = command_factory
+
+        self.target = (0, 0)
+        self.target_node = 0
     
     def run(self):
         vision_thread = Thread(target=self.run_vision)
@@ -73,7 +76,10 @@ class Robot:
                 time.sleep(remaining_time)
 
     def execute_cycle(self):
+        if self.control_panel.target != self.target:
+            self.target = self.control_panel.target
+            self.target_node = self.state.world_map.get_closest_node(self.target[0], self.target[1])
         self.sensing.collect(self.perception)
         self.state.update(self.perception)
-        command = self.decision_making.decide(self.state, self.control_panel.target, self.perception)
+        command = self.decision_making.decide(self.state, self.target, self.target_node, self.perception)
         command.execute()

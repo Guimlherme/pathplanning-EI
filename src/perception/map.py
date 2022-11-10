@@ -23,7 +23,7 @@ class Map:
         else:
             self.adjacency_list[node1].append(node2)
 
-    def get_closest_node(self, node, x, y):
+    def get_closest_neighbor(self, node, x, y):
         node_position = self.nodes[node]
         min_dist = sqrt( (node_position[0] - x)**2 + (node_position[1] - y)**2)
         min_dist_node = node
@@ -32,6 +32,20 @@ class Map:
             neighbor_position = self.nodes[neighbor]
             dist = sqrt( (neighbor_position[0] - x)**2 + (neighbor_position[1] - y)**2)
             if dist < min_dist:
+                min_dist = dist
+                min_dist_node = neighbor
+
+        return min_dist_node
+    
+
+    def get_closest_node(self, x, y):
+        # -1 to know it is the first
+        min_dist = -1
+        min_dist_node = -1
+
+        for neighbor, position in self.nodes.items():
+            dist = sqrt( (position[0] - x)**2 + (position[1] - y)**2)
+            if dist < min_dist or min_dist == -1:
                 min_dist = dist
                 min_dist_node = neighbor
 
