@@ -14,18 +14,18 @@ class DecisionMaking:
     def decide(self, state, target, target_node):
         next_waypoint = self.plan(state, target_node)
         self.next_waypoint = next_waypoint
-        print("Current node: ", state.node)
-        print("Target: ", target)
-        print("Target node:", target_node)
-        print("Next waypoint: ", next_waypoint)
+        # print("Current node: ", state.node)
+        # print("Target: ", target)
+        # print("Target node:", target_node)
+        # print("Next waypoint: ", next_waypoint)
 
         command = self.current_state.execute(state, target, next_waypoint)
         next_state = self.current_state.check_transition(state, target, next_waypoint)
         if next_state is not None:
             self.current_state = next_state
             
-        if self.debug:
-            print("Decision Making:", command.get_name(), "\n")
+        # if self.debug:
+        #     print("Decision Making:", command.get_name(), "\n")
         return command
 
     def need_half_turn(self, state, waypoint):
@@ -64,7 +64,7 @@ class ForwardState:
     def check_transition(self, state, target, next_waypoint):
         changed_target = False
         if self.next_waypoint != next_waypoint:
-            print("Changed waypoint!")
+            # print("Changed waypoint!")
             changed_target = True
             self.next_waypoint = next_waypoint
             self.next_waypoint_position = np.array(state.world_map.nodes[next_waypoint])
@@ -77,9 +77,9 @@ class ForwardState:
         waypoint_angle = atan2(waypoint_vector[1], waypoint_vector[0])
 
         angle_diference = angle_diference_with_sign(state.theta, waypoint_angle)
-        print("Robot position: ", robot_position)
-        print("Waypoint angle: ", waypoint_angle)
-        print("Angle difference: ", angle_diference)
+        # print("Robot position: ", robot_position)
+        # print("Waypoint angle: ", waypoint_angle)
+        # print("Angle difference: ", angle_diference)
 
         # if changed to a target behind it, turn now
         if changed_target and (abs(angle_diference - pi) < TURN_ANGLE_THRESHOLD or abs(angle_diference + pi) < TURN_ANGLE_THRESHOLD):

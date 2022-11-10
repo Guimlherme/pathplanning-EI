@@ -43,6 +43,9 @@ class State:
         self.left_wheel_command = 0
         self.right_wheel_command = 0
 
+        self.localization_elapsed_time = 0
+        self.vision_elapsed_time = 0
+
     def reset(self):
         self.x = self.control_panel.reset_values[0]
         self.y = self.control_panel.reset_values[1]
@@ -53,8 +56,8 @@ class State:
         if self.control_panel.reset_flag:
             self.reset()
         
-        if self.debug:
-            print("Previous Localization (x, y, theta) = ", self.x, self.y, self.theta)
+        # if self.debug:
+        #     print("Previous Localization (x, y, theta) = ", self.x, self.y, self.theta)
 
         elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.localization_clock_id)
 
@@ -91,13 +94,13 @@ class State:
         else:
             self.obstacle_detected = False
         
-        if self.debug:
-            print("Encoders: ", right_encoder, left_encoder)
-            print("Wheel Speeds: ", right_speed, left_speed)
-            print("Linear and angular Speeds: ", self.linear_speed, self.angular_speed)
-            print("Elapsed time since last localization update: %.3f ms" % (1000*elapsed_time)) 
-            print("Localization (x, y, theta) = ", self.x, self.y, self.theta)
-            print("Object distance: ", obstacle_distance, " obstacle detected = ", self.obstacle_detected)
+        # if self.debug:
+        #     print("Encoders: ", right_encoder, left_encoder)
+        #     print("Wheel Speeds: ", right_speed, left_speed)
+        #     print("Linear and angular Speeds: ", self.linear_speed, self.angular_speed)
+        #     print("Elapsed time since last localization update: %.3f ms" % (1000*elapsed_time)) 
+        #     print("Localization (x, y, theta) = ", self.x, self.y, self.theta)
+        #     print("Object distance: ", obstacle_distance, " obstacle detected = ", self.obstacle_detected)
 
     def update_vision(self, image):
         elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.vision_clock_id)
