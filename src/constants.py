@@ -1,7 +1,7 @@
 import numpy as np
 
 CYCLE_TIME = 15e-3 # s
-DISTANCE_THRESHOLD = 15 # cm
+DISTANCE_THRESHOLD = 5 # cm
 FINISH_TURN_ANGLE_THRESHOLD = np.deg2rad(15) # rad
 TURN_ANGLE_THRESHOLD = np.deg2rad(35)
 
