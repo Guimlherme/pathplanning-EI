@@ -79,6 +79,9 @@ class State:
             self.previous_line_angle = self.line_angle
             self.line_angle += self.angular_speed * elapsed_time
 
+        self.obstacle_distance = obstacle_distance
+        self.elapsed_time = elapsed_time
+        
         if obstacle_distance < OBSTACLE_THRESHOLD:
             if self.obstacle_detected_cycle_count < OBSTACLE_DETECTED_CYCLE_THRESHOLD:
                 self.obstacle_detected_cycle_count += 1

@@ -13,6 +13,7 @@ class DecisionMaking:
 
     def decide(self, state, target, target_node):
         next_waypoint = self.plan(state, target_node)
+        self.next_waypoint = next_waypoint
         print("Current node: ", state.node)
         print("Target: ", target)
         print("Target node:", target_node)
@@ -87,6 +88,9 @@ class ForwardState:
         elif state.intersection_detected() and abs(angle_diference) > TURN_ANGLE_THRESHOLD:
             return TurnState(self.command_factory, state, angle_diference)
         return None
+    
+    def get_name(self):
+        return "ForwardState"
 
 class StoppedState:
     def __init__(self, command_factory):
@@ -99,6 +103,9 @@ class StoppedState:
         if not state.position_is(target):
             return ForwardState(self.command_factory)
         return None
+
+    def get_name(self):
+        return "StoppedState"
 
 class TurnState:
     def __init__(self, command_factory, state, angle):
@@ -119,6 +126,9 @@ class TurnState:
         if self.finished_turning and not state.obstacle_detected:
             return ForwardState(self.command_factory)
         return None
+
+    def get_name(self):
+        return "TurnState"
 
 def angle_diference(x, y):
     diff = y - x

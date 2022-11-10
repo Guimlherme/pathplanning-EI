@@ -3,25 +3,11 @@ from perception import State, Map
 from threading import Thread
 import time
 import ctypes
-
+import json
 from constants import CYCLE_TIME
-def _async_raise(tid, exctype):
-    '''Raises an exception in the threads with id tid'''
-    if not inspect.isclass(exctype):
-        raise TypeError("Only types can be raised (not instances)")
-    res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(tid),
-                                                     ctypes.py_object(exctype))
-    if res == 0:
-        raise ValueError("invalid thread id")
-    elif res != 1:
-        # "if it returns a number greater than one, you're in trouble,
-        # and you should call it again with exc=NULL to revert the effect"
-        ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(tid), None)
-        raise SystemError("PyThreadState_SetAsyncExc failed")
-
 
 class Robot:
-    def __init__(self, sensing, decision_making, world_map, control_panel, system_clock, network, command_factory):
+    def __init__(self, sensing, decision_making, world_map, control_panel, system_clock, network, command_factory, debug=True):
         self.sensing = sensing
         self.decision_making = decision_making
         self.state = State(world_map, control_panel, system_clock, debug=True)
@@ -33,7 +19,18 @@ class Robot:
 
         self.target = (0, 0)
         self.target_node = 0
+
+        self.debug = debug
+        if self.debug:
+            self.reset_history()
     
+    def reset_history(self):
+        self.history = {
+                'x': [], 'y': [], 'theta': [], 
+                'linear_speed': [], 'angular_speed': [], 'elapsed_time': [], 'object_distance': [],   
+                'next_waypoint': [], 'current_state': [],     
+        }
+
     def run(self):
         vision_thread = Thread(target=self.run_vision)
         network_thread = Thread(target=self.network.read)
@@ -70,6 +67,11 @@ class Robot:
                 self.execute_cycle()
             else:
                 self.command_factory.stopped().execute(self.state)
+                if len(self.history['x']) > 0:
+                    with open('log.txt', 'w') as logfile:
+                        logfile.write(json.dumps(self.history))
+                    self.reset_history()
+                
             elapsed_time = self.system_clock.get_elapsed_time_since_last_call(clock_id) # get elapsed time
             remaining_time = CYCLE_TIME - elapsed_time
             if remaining_time > 0:
@@ -84,3 +86,13 @@ class Robot:
         self.state.update_from_sensors(right_encoder, left_encoder, obstacle_distance)
         command = self.decision_making.decide(self.state, self.target, self.target_node)
         command.execute(self.state)
+        if self.debug:
+            self.history['x'].append(self.state.x)
+            self.history['y'].append(self.state.y)
+            self.history['theta'].append(self.state.theta)
+            self.history['linear_speed'].append(self.state.linear_speed)
+            self.history['angular_speed'].append(self.state.angular_speed)
+            self.history['elapsed_time'].append(self.state.elapsed_time)
+            self.history['object_distance'].append(self.state.obstacle_distance)
+            self.history['next_waypoint'].append(self.decision_making.next_waypoint)
+            self.history['current_state'].append(self.decision_making.current_state.get_name())
