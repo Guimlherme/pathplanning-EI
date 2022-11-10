@@ -14,7 +14,8 @@ class DecisionMaking:
     def decide(self, state, target, target_node):
         next_waypoint = self.plan(state, target_node)
         print("Current node: ", state.node)
-        print("Target: ", target_node)
+        print("Target: ", target)
+        print("Target node:", target_node)
         print("Next waypoint: ", next_waypoint)
 
         command = self.current_state.execute(state, target, next_waypoint)
