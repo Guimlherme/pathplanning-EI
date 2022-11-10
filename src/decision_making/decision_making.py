@@ -38,7 +38,12 @@ class DecisionMaking:
         path = find_path(state.world_map, state.node, target_node)
         if path is None:
             return state.node
-        next_waypoint = list(path)[1]
+        path_list = list(path)
+        if len(path_list) == 0:
+            return state.node
+        if len(path_list) == 1:
+            return path_list[0]
+        next_waypoint = path_list[1]
         return next_waypoint
 
 
