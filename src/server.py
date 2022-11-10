@@ -8,7 +8,6 @@ from clock import SystemClock
 from command import CommandFactory
 from maps import get_trivial_map, get_grid_map
 
-from infrastructure.arduino import Arduino, ArduinoSensors, ArduinoActuators
 from infrastructure.mock import MockSensors, MockActuators
 
 import argparse
@@ -41,6 +40,7 @@ system_clock = SystemClock()
 sensors = MockSensors(system_clock, debug=debug)
 actuators = MockActuators()
 if not args.mock:
+    from infrastructure.arduino import Arduino, ArduinoSensors, ArduinoActuators
     arduino = Arduino()
     arduino.connect()
     actuators = ArduinoActuators(arduino)

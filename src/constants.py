@@ -1,7 +1,7 @@
 import numpy as np
 
-CYCLE_TIME = 15e-3 # s
-DISTANCE_THRESHOLD = 15 # cm
+CYCLE_TIME = 120e-3 # s
+DISTANCE_THRESHOLD = 5 # cm
 FINISH_TURN_ANGLE_THRESHOLD = np.deg2rad(15) # rad
 TURN_ANGLE_THRESHOLD = np.deg2rad(35)
 
@@ -15,8 +15,8 @@ OMEGA_MAX = 10.00 # rad/s
 # CONTROL LAW PARAMETERS
 XI = 0.70
 WN = 6.00      # rad/s
-TAU = 0.600    # s
-TD = 0.050     # s - time of discretization
+TAU = 0.615    # s
+TD = CYCLE_TIME     # s - time of discretization
 
 CONTROL_PARAMETERS = {
      'phi':{'k':(2*(TAU-TD)*(WN**2))/(4+TD*WN*(4*XI+TAU*WN)),
