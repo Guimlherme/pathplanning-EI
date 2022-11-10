@@ -13,6 +13,7 @@ class DecisionMaking:
 
     def decide(self, state, target, target_node):
         next_waypoint = self.plan(state, target_node)
+        print("Current node: ", state.node)
         print("Target: ", target_node)
         print("Next waypoint: ", next_waypoint)
 
@@ -22,7 +23,7 @@ class DecisionMaking:
             self.current_state = next_state
             
         if self.debug:
-            print("Decision Making:", command.get_name())
+            print("Decision Making:", command.get_name(), "\n")
         return command
 
     def need_half_turn(self, state, waypoint):
