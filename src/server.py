@@ -1,5 +1,5 @@
 from perception import State, Sensing
-from decision_making.simple import DecisionMaking
+from decision_making.decision_making import DecisionMaking
 from communication import Network
 from threading import Thread
 from robot import ControlPanel, Robot
@@ -28,7 +28,7 @@ should_run = args.run
 configs = Configs()
 
 # Build world map
-world_map = get_trivial_map()
+world_map = get_grid_map()
 
 # Build control panel and system clock
 control_panel = ControlPanel(should_run)

@@ -1,8 +1,24 @@
+import inspect
 from perception import State, Map, Perception
 from threading import Thread
 import time
+import ctypes
 
 from constants import CYCLE_TIME
+def _async_raise(tid, exctype):
+    '''Raises an exception in the threads with id tid'''
+    if not inspect.isclass(exctype):
+        raise TypeError("Only types can be raised (not instances)")
+    res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(tid),
+                                                     ctypes.py_object(exctype))
+    if res == 0:
+        raise ValueError("invalid thread id")
+    elif res != 1:
+        # "if it returns a number greater than one, you're in trouble,
+        # and you should call it again with exc=NULL to revert the effect"
+        ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(tid), None)
+        raise SystemError("PyThreadState_SetAsyncExc failed")
+
 
 class Robot:
     def __init__(self, sensing, decision_making, world_map, control_panel, system_clock, network, command_factory):
@@ -34,7 +50,7 @@ class Robot:
         except KeyboardInterrupt:
             print("attempting to close threads")
             self.shutdown = True
-            self.network.shutdown = True
+            self.network.close()
             for thread in threads:
                 thread.join()
             print ("threads successfully closed")

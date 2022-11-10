@@ -21,9 +21,12 @@ class Network:
     def read(self): 
         # configure how many client the server can listen simultaneously
         self.server_socket.listen(1)
-        conn, address = self.server_socket.accept() 
+        try:
+            conn, address = self.server_socket.accept() 
+        except:
+            print("Exiting network, no connection established")
+            return
         print("Connection from: " + str(address))
-        
         while not self.shutdown:
             data = conn.recv(1024).decode()
             if not data:
@@ -33,6 +36,8 @@ class Network:
             conn.send(result.encode()) 
         conn.close() 
 
+    def close(self):
+        self.server_socket.shutdown(socket.SHUT_RDWR)
     
     def parse(self, data):
         commands = data.split(' ')
