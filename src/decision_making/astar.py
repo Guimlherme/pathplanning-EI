@@ -74,7 +74,7 @@ class AStar(ABC):
         startNode = searchNodes[start] = AStar.SearchNode(
             start, gscore=0.0, fscore=self.heuristic_cost_estimate(start, goal)
         )
-        openSet:list = []
+        openSet = []
         heappush(openSet, startNode)
         while openSet:
             current = heappop(openSet)

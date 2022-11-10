@@ -4,12 +4,14 @@ from .preprocessing_image import preprocessing_image
 
 from math import sin, cos, pi
 
+from threading import Lock
 # An obstacle is considered as detected if it is closer than OBSTACLE_THRESHOLD for at least OBSTACLE_CYCLE_THRESHOLD cycles
 OBSTACLE_THRESHOLD = 50
 OBSTACLE_DETECTED_CYCLE_THRESHOLD = 10
 
 class State:
     def __init__(self, world_map : Map, control_panel, system_clock, debug):
+        self.lock = Lock()
         self.debug = debug
 
         self.theta = 0
@@ -34,6 +36,7 @@ class State:
 
         self.right_encoder_previous = 0
         self.left_encoder_previous = 0
+        self.previous_line_angle = 0
 
     def reset(self):
         self.x = self.control_panel.reset_values[0]
@@ -68,6 +71,10 @@ class State:
         
         self.node = self.world_map.get_closest_neighbor(self.node, self.x, self.y)
 
+        with self.lock:
+            self.previous_line_angle = self.line_angle
+            self.line_angle += self.angular_speed * elapsed_time
+
         if obstacle_distance < OBSTACLE_THRESHOLD:
             if self.obstacle_detected_cycle_count < OBSTACLE_DETECTED_CYCLE_THRESHOLD:
                 self.obstacle_detected_cycle_count += 1
@@ -85,7 +92,9 @@ class State:
             print("Object distance: ", obstacle_distance, " obstacle detected = ", self.obstacle_detected)
 
     def update_vision(self, image):
-        self.line_angle = preprocessing_image(image)
+        with self.lock: 
+            self.line_angle = preprocessing_image(image)
+            self.previous_line_angle = self.line_angle
 
     def position_is(self, target) -> bool:
         return abs(self.x - target[0]) < DISTANCE_THRESHOLD and abs(self.y - target[1]) < DISTANCE_THRESHOLD
