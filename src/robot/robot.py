@@ -73,6 +73,7 @@ class Robot:
             if self.control_panel.run:
                 self.execute_cycle()
             else:
+                print("Run: ", self.control_panel.run)
                 with self.control_lock:
                     self.command = self.command_factory.stopped()
                 if len(self.history['x']) > 0:
@@ -95,7 +96,7 @@ class Robot:
         command = self.decision_making.decide(self.state, self.target, self.target_node)
         with self.control_lock:
             self.command = command
-            
+
         if self.debug:
             self.history['x'].append(self.state.x)
             self.history['y'].append(self.state.y)
@@ -112,6 +113,7 @@ class Robot:
         while not self.shutdown:
             _ = self.system_clock.get_elapsed_time_since_last_call(self.control_clock_id) # mark first call
             with self.control_lock:
+                print("Running command ", self.command.get_name())
                 self.command.execute(self.state)
             elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.control_clock_id) # get elapsed time
             remaining_time = CONTROL_TIME - elapsed_time

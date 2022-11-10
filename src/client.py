@@ -4,19 +4,20 @@ import time
 
 def get_connection(host, port):
     client_socket = socket.socket()  
-    t = 0.4
+    t = 0.5
     count = 1
     connected = False
-    while not connected and count <= 5:
+    while not connected and count <= 10:
         print(f"Trying to connect, attempt #{count}")
         try:
             client_socket.connect((host, port))  
             connected = True
         except socket.error:
-            print("Connection failed, retrying")
-            time.sleep(t)
-            count += 1
-            t *= 2
+            if count <=10:
+                print("Connection failed, retrying")
+                time.sleep(t)
+                count += 1
+                t *= 2
     if not connected:
         raise Exception('Could not connect')
     return client_socket
