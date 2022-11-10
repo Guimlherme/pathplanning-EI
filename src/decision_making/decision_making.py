@@ -3,7 +3,7 @@ from .astar import find_path
 import command
 from math import pi, cos, sin, atan2
 
-from constants import ANGLE_THRESHOLD
+from constants import TURN_ANGLE_THRESHOLD, FINISH_TURN_ANGLE_THRESHOLD
 
 class DecisionMaking:
     def __init__(self, command_factory, debug=False):
@@ -81,10 +81,10 @@ class ForwardState:
         print("Angle difference: ", angle_diference)
 
         # if changed to a target behind it, turn now
-        if changed_target and (abs(angle_diference - pi) < ANGLE_THRESHOLD or abs(angle_diference + pi) < ANGLE_THRESHOLD):
+        if changed_target and (abs(angle_diference - pi) < TURN_ANGLE_THRESHOLD or abs(angle_diference + pi) < TURN_ANGLE_THRESHOLD):
             return TurnState(self.command_factory, state, angle_diference)
         # turn when arrive at an intersection
-        elif state.intersection_detected() and abs(angle_diference) > ANGLE_THRESHOLD:
+        elif state.intersection_detected() and abs(angle_diference) > TURN_ANGLE_THRESHOLD:
             return TurnState(self.command_factory, state, angle_diference)
         return None
 
@@ -114,7 +114,7 @@ class TurnState:
         return self.command_factory.right_turn()
 
     def check_transition(self, state, target, target_node):
-        if angle_diference(state.theta - self.initial_theta, self.angle)  < np.deg2rad(10):
+        if angle_diference(state.theta - self.initial_theta, self.angle)  < FINISH_TURN_ANGLE_THRESHOLD:
             self.finished_turning = True
         if self.finished_turning and not state.obstacle_detected:
             return ForwardState(self.command_factory)
