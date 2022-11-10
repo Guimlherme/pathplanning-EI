@@ -1,6 +1,6 @@
 RIGHT = 1
 LEFT = -1
-from constants import WHEEL_RADIUS,ROBOT_SPEED,ROBOT_WIDTH,OMEGA_MAX
+from constants import WHEEL_RADIUS,ROBOT_SPEED,ROBOT_WIDTH,OMEGA_MAX,CONTROL_PARAMETERS
 import numpy as np
 
 class Command:
@@ -51,15 +51,18 @@ class Forward(Command):
 
     def __init__(self, actuators):
         self.actuators = actuators
-        self.previus_command = 0
         self.command = 0
 
     def execute(self, state):
 
-        u = self.previus_command
-        u = 0.7482 * u + 9.2045*state.line_angle - 9.676 * state.previous_line_angle
+        privious_command = self.command
+        phi = state.line_angle
+        previous_phi= state.previous_line_angle
 
-        self.previus_command= self.command
+        u  = CONTROL_PARAMETERS['u']['k-1']*privious_command
+        u += CONTROL_PARAMETERS['phi']['k']*phi 
+        u += CONTROL_PARAMETERS['phi']['k-1']*previous_phi
+
         self.command = u
 
         if u > 0:
@@ -77,6 +80,7 @@ class Forward(Command):
             if w_left > OMEGA_MAX:
                 w_left = OMEGA_MAX
                 w_right = 2*(1/WHEEL_RADIUS)*(ROBOT_SPEED) - (OMEGA_MAX)
+                
         state.right_wheel_command = w_right
         state.left_wheel_command = w_left
         print("Left wheel speed: ", w_left)
