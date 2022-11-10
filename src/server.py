@@ -27,7 +27,7 @@ debug = args.debug
 should_run = args.run
 
 configs = Configs()
-if args.host != "":
+if args.host is not None:
     configs.set_setting("host", args.host)
 
 # Build world map
