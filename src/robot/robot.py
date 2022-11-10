@@ -85,6 +85,7 @@ class Robot:
             elapsed_time = self.system_clock.get_elapsed_time_since_last_call(clock_id) # get elapsed time
             remaining_time = CYCLE_TIME - elapsed_time
             if remaining_time > 0:
+                print("Going to sleep for", remaining_time)
                 time.sleep(remaining_time)
 
     def execute_cycle(self):
@@ -92,12 +93,17 @@ class Robot:
             self.target = self.control_panel.target
             self.target_node = self.state.world_map.get_closest_node(self.target[0], self.target[1])
 
+        print("A")
         right_encoder, left_encoder, obstacle_distance = self.sensing.collect()
+        print("B")
         self.state.update_from_sensors(right_encoder, left_encoder, obstacle_distance)
+        print("C")
         command = self.decision_making.decide(self.state, self.target, self.target_node)
+        print("D")
         with self.control_lock:
+            print("E")
             self.command = command
-
+        print("F")
         if self.debug:
             self.history['x'].append(self.state.x)
             self.history['y'].append(self.state.y)
@@ -109,6 +115,7 @@ class Robot:
             self.history['object_distance'].append(self.state.obstacle_distance)
             self.history['next_waypoint'].append(self.decision_making.next_waypoint)
             self.history['current_state'].append(self.decision_making.current_state.get_name())
+        print("G")
 
     def run_control(self):
         while not self.shutdown:
