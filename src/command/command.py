@@ -23,7 +23,7 @@ class LeftTurn(Command):
         self.actuators = actuators
 
     def execute(self, state):
-        self.actuators.set_speeds(-1, 1)
+        self.actuators.set_speeds(1, -1)
 
     def get_name(self):
         return "LeftTurn"
@@ -33,7 +33,7 @@ class RightTurn(Command):
         self.actuators = actuators
 
     def execute(self, state):
-        self.actuators.set_speeds(1, -1)
+        self.actuators.set_speeds(-1, 1)
 
     def get_name(self):
         return "RightTurn"
