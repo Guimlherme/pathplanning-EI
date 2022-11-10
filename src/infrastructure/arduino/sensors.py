@@ -11,7 +11,7 @@ class ArduinoSensors:
         self.arduino = arduino
 
     def camera_shot(self):
-        my_file = np.empty((1280, 1024, 3), dtype = np.uint8)
+        my_file = np.empty((1024, 1280, 3), dtype = np.uint8)
         self.arduino.camera.capture(my_file, 'rgb')
         return my_file
 
