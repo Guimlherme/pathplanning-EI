@@ -2,7 +2,7 @@ from .map import Map
 from constants import DISTANCE_THRESHOLD, WHEEL_DIST
 from .preprocessing_image import preprocessing_image
 
-from math import sin, cos, pi
+from math import sin, cos, pi, sqrt
 
 from threading import Lock
 # An obstacle is considered as detected if it is closer than OBSTACLE_THRESHOLD for at least OBSTACLE_CYCLE_THRESHOLD cycles
@@ -97,7 +97,7 @@ class State:
             self.previous_line_angle = self.line_angle
 
     def position_is(self, target) -> bool:
-        return abs(self.x - target[0]) < DISTANCE_THRESHOLD and abs(self.y - target[1]) < DISTANCE_THRESHOLD
+        return sqrt((self.x - target[0])**2 + (self.y - target[1])**2) < DISTANCE_THRESHOLD
     
     def intersection_detected(self) -> bool:
         for node, node_position in self.world_map.nodes.items():
