@@ -71,9 +71,10 @@ class Robot:
         while not self.shutdown:
             _ = self.system_clock.get_elapsed_time_since_last_call(clock_id) # mark first call
             if self.control_panel.run:
+                print("Run: True")
                 self.execute_cycle()
             else:
-                print("Run: ", self.control_panel.run)
+                print("Run: False")
                 with self.control_lock:
                     self.command = self.command_factory.stopped()
                 if len(self.history['x']) > 0:
