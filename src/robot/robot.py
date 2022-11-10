@@ -1,6 +1,6 @@
 import inspect
 from perception import State, Map
-from threading import Thread
+from threading import Thread, Lock
 import time
 import ctypes
 import json
@@ -21,6 +21,8 @@ class Robot:
 
         self.target = (0, 0)
         self.target_node = 0
+
+        self.control_lock = Lock()
 
         self.debug = debug
         if self.debug:
@@ -71,7 +73,8 @@ class Robot:
             if self.control_panel.run:
                 self.execute_cycle()
             else:
-                self.command = self.command_factory.stopped()
+                with self.control_lock:
+                    self.command = self.command_factory.stopped()
                 if len(self.history['x']) > 0:
                     with open('log.txt', 'w') as logfile:
                         logfile.write(json.dumps(self.history))
@@ -89,8 +92,10 @@ class Robot:
 
         right_encoder, left_encoder, obstacle_distance = self.sensing.collect()
         self.state.update_from_sensors(right_encoder, left_encoder, obstacle_distance)
-        self.command = self.decision_making.decide(self.state, self.target, self.target_node)
-
+        command = self.decision_making.decide(self.state, self.target, self.target_node)
+        with self.control_lock:
+            self.command = command
+            
         if self.debug:
             self.history['x'].append(self.state.x)
             self.history['y'].append(self.state.y)
@@ -106,7 +111,8 @@ class Robot:
     def run_control(self):
         while not self.shutdown:
             _ = self.system_clock.get_elapsed_time_since_last_call(self.control_clock_id) # mark first call
-            self.command.execute(self.state)
+            with self.control_lock:
+                self.command.execute(self.state)
             elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.control_clock_id) # get elapsed time
             remaining_time = CONTROL_TIME - elapsed_time
             if remaining_time > 0:
