@@ -49,6 +49,6 @@ class Arduino:
         self.resetEncoders()
         print("Arduino connected!")
 
-    def resetEncoders(self):
+    def resetEncoders(self): # be careful when using this
         write_order(self.serial_file, Order.RESETENC)
 
