@@ -4,7 +4,7 @@ import time
 
 def get_connection(host, port):
     client_socket = socket.socket()  
-    t = 0.5
+    t = 0.3
     count = 1
     connected = False
     while not connected and count <= 10:
