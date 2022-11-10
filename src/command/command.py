@@ -56,33 +56,32 @@ class Forward(Command):
 
     def execute(self, state):
 
-        # u = self.previus_command
-        # u = 0.7482 * u + 9.2045*state.line_angle - 9.676 * state.previous_line_angle
+        u = self.previus_command
+        u = 0.7482 * u + 9.2045*state.line_angle - 9.676 * state.previous_line_angle
 
-        # self.previus_command= self.command
-        # self.command = u
+        self.previus_command= self.command
+        self.command = u
 
-        # if u > 0:
-        #     w_right = (ROBOT_SPEED+((ROBOT_WIDTH/2)*u))/WHEEL_RADIUS
-        #     w_left = (ROBOT_SPEED-((ROBOT_WIDTH/2)*u))/WHEEL_RADIUS
+        if u > 0:
+            w_right = (ROBOT_SPEED+((ROBOT_WIDTH/2)*u))/WHEEL_RADIUS
+            w_left = (ROBOT_SPEED-((ROBOT_WIDTH/2)*u))/WHEEL_RADIUS
 
-        #     if w_right > OMEGA_MAX:
-        #         w_right = OMEGA_MAX
-        #         w_left = (1/WHEEL_RADIUS)*(ROBOT_SPEED*u)/(u+ROBOT_SPEED*ROBOT_WIDTH)
-        # else:
-        #     u = np.abs(u)
-        #     w_right = (ROBOT_SPEED-((ROBOT_WIDTH/2)*u))/WHEEL_RADIUS
-        #     w_left = (ROBOT_SPEED+((ROBOT_WIDTH/2)*u))/WHEEL_RADIUS
+            if w_right > OMEGA_MAX:
+                w_right = OMEGA_MAX
+                w_left = 2*(1/WHEEL_RADIUS)*(ROBOT_SPEED) - (OMEGA_MAX)
+        else:
+            u = np.abs(u)
+            w_right = (ROBOT_SPEED-((ROBOT_WIDTH/2)*u))/WHEEL_RADIUS
+            w_left = (ROBOT_SPEED+((ROBOT_WIDTH/2)*u))/WHEEL_RADIUS
 
-        #     if w_left > OMEGA_MAX:
-        #         w_left = OMEGA_MAX
-        #         w_right = (1/WHEEL_RADIUS)*(ROBOT_SPEED*u)/(u+ROBOT_SPEED*ROBOT_WIDTH)
-        w_right, w_left = 0.8*OMEGA_MAX, 0.8*OMEGA_MAX
+            if w_left > OMEGA_MAX:
+                w_left = OMEGA_MAX
+                w_right = 2*(1/WHEEL_RADIUS)*(ROBOT_SPEED) - (OMEGA_MAX)
         state.right_wheel_command = w_right
         state.left_wheel_command = w_left
         print("Left wheel speed: ", w_left)
         print("Right wheel speed: ", w_right)
-        self.actuators.set_speeds(w_right / OMEGA_MAX, w_left / OMEGA_MAX)
+        self.actuators.set_speeds(w_right / (OMEGA_MAX+1.3), w_left / (OMEGA_MAX+1.3))
     
     def get_name(self):
         return "Forward"
