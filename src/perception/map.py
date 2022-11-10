@@ -13,6 +13,10 @@ class Map:
         self._add_directed_edge(node1, node2)
         self._add_directed_edge(node2, node1)
 
+    def remove_edge(self, node1, node2):
+        self.adjacency_list[node1].remove(node2)
+        self.adjacency_list[node2].remove(node1)
+
     def _add_directed_edge(self, node1, node2):
         if node1 not in self.adjacency_list:
             self.adjacency_list[node1] = [node2]
@@ -38,7 +42,7 @@ class Map:
         for node in self.nodes:
             plt.scatter(*self.nodes[node], c='#0000FF')
             for neighbor in self.adjacency_list[node]:
-                print(self.nodes[node][0])
+                # print(self.nodes[node][0])
                 plt.plot([self.nodes[node][0], self.nodes[neighbor][0]],[self.nodes[node][1], self.nodes[neighbor][1]], c='#FF0000')
         plt.show()
 
