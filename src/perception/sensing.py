@@ -4,8 +4,11 @@ class Sensing:
         self.debug = debug
 
     def collect(self):
+        print("A1")
         right_encoder = self.sensors.right_encoder()
+        print("A2")
         left_encoder = self.sensors.left_encoder()
+        print("A3")
         object_distance = self.sensors.ultrassound_distance()
         return right_encoder, left_encoder, object_distance
 
