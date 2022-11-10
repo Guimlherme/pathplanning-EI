@@ -30,7 +30,7 @@ class ForwardState:
         if state.position_is(target):
             return StoppedState(self.command_factory)
         elif state.obstacle_detected:
-            return TurnState(self.command_factory, state, np.deg2rad(90))
+            return TurnState(self.command_factory, state, np.deg2rad(180))
         return None
     
     def get_name(self):
