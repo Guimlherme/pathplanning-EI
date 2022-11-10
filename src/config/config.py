@@ -7,3 +7,6 @@ class Configs:
     
     def get_setting(self, name):
         return self.config[name]
+    
+    def set_setting(self, name, value):
+        self.config[name] = value

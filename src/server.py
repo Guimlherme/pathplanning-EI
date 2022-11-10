@@ -20,12 +20,15 @@ parser = argparse.ArgumentParser(
 parser.add_argument('-r', '--run', action='store_true')
 parser.add_argument('-m', '--mock', action='store_true')
 parser.add_argument('-d', '--debug', action='store_true')
+parser.add_argument('-a', '--host')
 args = parser.parse_args()
 
 debug = args.debug
 should_run = args.run
 
 configs = Configs()
+if args.host != "":
+    configs.set_setting("host", args.host)
 
 # Build world map
 world_map = get_grid_map()
