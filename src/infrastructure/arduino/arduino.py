@@ -1,4 +1,5 @@
 from __future__ import division, print_function
+from picamera import PiCamera
 
 import time
 import numpy as np
@@ -47,6 +48,9 @@ class Arduino:
         while (c!=b''):
             c = self.serial_file.read(1)
         self.resetEncoders()
+        self.camera = PiCamera()
+        self.camera.start_preview()
+        sleep(2)
         print("Arduino connected!")
 
     def resetEncoders(self): # be careful when using this

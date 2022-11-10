@@ -10,10 +10,10 @@ class ArduinoSensors:
         self.debug = debug
         self.arduino = arduino
 
-    def camera_shot(self):# TODO get from the camera
-        image = np.zeros((64, 64, 3), np.uint8)
-        image[:, 30:32, :] = 1
-        return image
+    def camera_shot(self):
+        my_file = np.empty((1280, 1024, 3), dtype = np.uint8)
+        self.arduino.camera.capture(my_file, 'rgb')
+        return my_file
 
     def left_encoder(self):
         write_order(self.arduino.serial_file, Order.READENCODERl)
