@@ -12,13 +12,13 @@ class DecisionMaking:
         self.debug = debug
         self.current_state = StoppedState(command_factory)
 
-    def decide(self, state, target, target_node, perception):
+    def decide(self, state, target, target_node):
         next_waypoint = self.plan(state, target_node)
         print("Target: ", target_node)
         print("Next waypoint: ", next_waypoint)
 
-        command = self.current_state.execute(state, target, next_waypoint, perception)
-        next_state = self.current_state.check_transition(state, target, next_waypoint, perception)
+        command = self.current_state.execute(state, target, next_waypoint)
+        next_state = self.current_state.check_transition(state, target, next_waypoint)
         if next_state is not None:
             self.current_state = next_state
             
@@ -53,13 +53,13 @@ class ForwardState:
         self.next_waypoint = None
         self.next_waypoint_position = None
 
-    def execute(self, state, target, next_waypoint, perception):
+    def execute(self, state, target, next_waypoint):
         if self.next_waypoint is None:
             self.next_waypoint = next_waypoint
             self.next_waypoint_position = np.array(state.world_map.nodes[next_waypoint])
-        return self.command_factory.forward(perception.line_angle)
+        return self.command_factory.forward(state.line_angle)
 
-    def check_transition(self, state, target, next_waypoint, perception):
+    def check_transition(self, state, target, next_waypoint):
         changed_target = False
         if self.next_waypoint != next_waypoint:
             print("Changed waypoint!")
@@ -91,10 +91,10 @@ class StoppedState:
     def __init__(self, command_factory):
         self.command_factory = command_factory
         
-    def execute(self, state, target, target_node, perception):
+    def execute(self, state, target, target_node):
         return self.command_factory.stopped()
         
-    def check_transition(self, state, target, target_node, perception):
+    def check_transition(self, state, target, target_node):
         if not state.position_is(target):
             return ForwardState(self.command_factory)
         return None
@@ -107,10 +107,10 @@ class TurnState:
 
         self.finished_turning = False
 
-    def execute(self, state, target, target_node, perception):
+    def execute(self, state, target, target_node):
         return self.command_factory.turn(command.RIGHT)
 
-    def check_transition(self, state, target, target_node, perception):
+    def check_transition(self, state, target, target_node):
         if angle_diference(state.theta, self.initial_theta)  < np.deg2rad(10):
             self.finished_turning = True
         if self.finished_turning and not state.obstacle_detected:

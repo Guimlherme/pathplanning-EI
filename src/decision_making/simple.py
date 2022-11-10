@@ -9,9 +9,9 @@ class DecisionMaking:
         self.debug = debug
         self.current_state = StoppedState(command_factory)
 
-    def decide(self, state, target, target_node, perception):
-        command = self.current_state.execute(state, target, perception)
-        next_state = self.current_state.check_transition(state, target, perception)
+    def decide(self, state, target, target_node):
+        command = self.current_state.execute(state, target)
+        next_state = self.current_state.check_transition(state, target)
         if next_state is not None:
             self.current_state = next_state
 
@@ -23,10 +23,10 @@ class ForwardState:
     def __init__(self, command_factory):
         self.command_factory = command_factory
 
-    def execute(self, state, target, perception):
-        return self.command_factory.forward(perception.line_angle)
+    def execute(self, state, target):
+        return self.command_factory.forward(state.line_angle)
 
-    def check_transition(self, state, target, perception):
+    def check_transition(self, state, target):
         if state.position_is(target):
             return StoppedState(self.command_factory)
         elif state.obstacle_detected:
@@ -37,10 +37,10 @@ class StoppedState:
     def __init__(self, command_factory):
         self.command_factory = command_factory
         
-    def execute(self, state, target, perception):
+    def execute(self, state, target):
         return self.command_factory.stopped()
         
-    def check_transition(self, state, target, perception):
+    def check_transition(self, state, target):
         if not state.position_is(target):
             return ForwardState(self.command_factory)
         return None
@@ -53,10 +53,10 @@ class TurnState:
 
         self.finished_turning = False
 
-    def execute(self, state, target, perception):
+    def execute(self, state, target):
         return self.command_factory.turn(command.RIGHT)
 
-    def check_transition(self, state, target, perception):
+    def check_transition(self, state, target):
         if angle_diference(state.theta, self.initial_theta)  < np.deg2rad(10):
             self.finished_turning = True
         if self.finished_turning and not state.obstacle_detected:

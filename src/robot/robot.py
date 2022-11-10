@@ -1,5 +1,5 @@
 import inspect
-from perception import State, Map, Perception
+from perception import State, Map
 from threading import Thread
 import time
 import ctypes
@@ -26,7 +26,6 @@ class Robot:
         self.decision_making = decision_making
         self.state = State(world_map, control_panel, system_clock, debug=True)
         self.control_panel = control_panel
-        self.perception = Perception(0, 0, 0, 0)
         self.shutdown = False
         self.system_clock = system_clock
         self.network = network
@@ -60,7 +59,8 @@ class Robot:
 
     def run_vision(self):
         while not self.shutdown:
-            self.sensing.collect_vision(self.perception)
+            image = self.sensing.collect_vision( )
+            self.state.update_vision(image)
     
     def run_everything(self):
         clock_id = self.system_clock.get_id()
@@ -79,7 +79,8 @@ class Robot:
         if self.control_panel.target != self.target:
             self.target = self.control_panel.target
             self.target_node = self.state.world_map.get_closest_node(self.target[0], self.target[1])
-        self.sensing.collect(self.perception)
-        self.state.update(self.perception)
-        command = self.decision_making.decide(self.state, self.target, self.target_node, self.perception)
+
+        right_encoder, left_encoder, obstacle_distance = self.sensing.collect()
+        self.state.update_from_sensors(right_encoder, left_encoder, obstacle_distance)
+        command = self.decision_making.decide(self.state, self.target, self.target_node)
         command.execute()
