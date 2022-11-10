@@ -69,7 +69,7 @@ class Robot:
             if self.control_panel.run:
                 self.execute_cycle()
             else:
-                self.command_factory.stopped().execute()
+                self.command_factory.stopped().execute(self.state)
             elapsed_time = self.system_clock.get_elapsed_time_since_last_call(clock_id) # get elapsed time
             remaining_time = CYCLE_TIME - elapsed_time
             if remaining_time > 0:
