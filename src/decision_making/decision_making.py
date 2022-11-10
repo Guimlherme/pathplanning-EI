@@ -2,7 +2,6 @@ import numpy as np
 from .astar import find_path
 import command
 from math import pi, cos, sin, atan2
-import scipy
 
 from constants import ANGLE_THRESHOLD
 
