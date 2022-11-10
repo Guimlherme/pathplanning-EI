@@ -12,7 +12,10 @@ class ArduinoSensors:
 
     def camera_shot(self):
         my_file = np.empty((1280, 1024, 3), dtype = np.uint8)
-        self.arduino.camera.capture(my_file, 'rgb')
+        try:
+            self.arduino.camera.capture(my_file, 'rgb')
+        except:
+            return my_file
         return my_file
 
     def left_encoder(self):
