@@ -15,6 +15,8 @@ class Stopped(Command):
         self.actuators = actuators
 
     def execute(self, state):
+        self.state.right_wheel_command = 0
+        self.state.left_wheel_command = 0
         self.actuators.set_speeds(0, 0)
     
     def get_name(self):
@@ -25,6 +27,8 @@ class LeftTurn(Command):
         self.actuators = actuators
 
     def execute(self, state):
+        self.state.right_wheel_command = 1
+        self.state.left_wheel_command = -1
         self.actuators.set_speeds(1, -1)
 
     def get_name(self):
@@ -35,6 +39,8 @@ class RightTurn(Command):
         self.actuators = actuators
 
     def execute(self, state):
+        self.state.right_wheel_command = -1
+        self.state.left_wheel_command = 1
         self.actuators.set_speeds(-1, 1)
 
     def get_name(self):
@@ -71,6 +77,9 @@ class Forward(Command):
             if w_left > OMEGA_MAX:
                 w_left = OMEGA_MAX
                 w_right = (1/WHEEL_RADIUS)*(ROBOT_SPEED*u)/(u+ROBOT_SPEED*ROBOT_WIDTH)
+
+        self.state.right_wheel_command = w_right
+        self.state.left_wheel_command = w_left
         self.actuators.set_speeds(w_right, w_left)
     
     def get_name(self):

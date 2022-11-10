@@ -3,6 +3,7 @@ from constants import DISTANCE_THRESHOLD, WHEEL_DIST
 from .preprocessing_image import preprocessing_image
 
 from math import sin, cos, pi, sqrt
+import numpy as np
 
 from threading import Lock
 # An obstacle is considered as detected if it is closer than OBSTACLE_THRESHOLD for at least OBSTACLE_CYCLE_THRESHOLD cycles
@@ -37,6 +38,9 @@ class State:
         self.right_encoder_previous = 0
         self.left_encoder_previous = 0
         self.previous_line_angle = 0
+        
+        self.left_wheel_command = 0
+        self.right_wheel_command = 0
 
     def reset(self):
         self.x = self.control_panel.reset_values[0]
@@ -53,8 +57,8 @@ class State:
 
         elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.clock_id)
 
-        right_speed = (right_encoder - self.right_encoder_previous)/elapsed_time
-        left_speed = (left_encoder - self.left_encoder_previous)/elapsed_time
+        right_speed = np.sign(self.right_wheel_command) * (right_encoder - self.right_encoder_previous)/elapsed_time
+        left_speed = np.sign(self.left_wheel_command) * (left_encoder - self.left_encoder_previous)/elapsed_time
 
         self.right_encoder_previous = right_encoder
         self.left_encoder_previous = left_encoder
