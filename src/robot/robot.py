@@ -27,8 +27,9 @@ class Robot:
     def reset_history(self):
         self.history = {
                 'x': [], 'y': [], 'theta': [], 
-                'linear_speed': [], 'angular_speed': [], 'elapsed_time': [], 'object_distance': [],   
-                'next_waypoint': [], 'current_state': [],     
+                'linear_speed': [], 'angular_speed': [], 
+                'vision_elapsed_time': [], 'localization_elapsed_time': [],
+                'object_distance': [], 'next_waypoint': [], 'current_state': [],     
         }
 
     def run(self):

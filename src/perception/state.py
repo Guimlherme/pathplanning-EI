@@ -43,6 +43,9 @@ class State:
         self.left_wheel_command = 0
         self.right_wheel_command = 0
 
+        self.vision_elapsed_time = 0
+        self.localization_elapsed_time = 0
+
     def reset(self):
         self.x = self.control_panel.reset_values[0]
         self.y = self.control_panel.reset_values[1]
