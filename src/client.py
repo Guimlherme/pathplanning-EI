@@ -1,6 +1,7 @@
 import socket
 import json
 import time
+from maps import get_grid_map
 
 def get_connection(host, port):
     client_socket = socket.socket()  
@@ -21,7 +22,7 @@ def get_connection(host, port):
         raise Exception('Could not connect')
     return client_socket
 
-def client_program(config):
+def client_program(config, map):
     host = config['host']
     port = config['port']
 
@@ -41,4 +42,5 @@ def client_program(config):
 if __name__ == '__main__':
     with open("config.json", "r") as f:
         config = json.load(f)
-    client_program(config)
+    map = get_grid_map(client=True)
+    client_program(config, map)

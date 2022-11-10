@@ -5,8 +5,13 @@ from perception import Map
 # (0,0) (1, 0) (2, 0) (3, 0)
 # 0 1 2 3
 
-def get_grid_map(n=5):
-    world_map = Map()
+def get_grid_map(n=5, client=False):
+    if client:
+        from perception import ClientMap
+        world_map = ClientMap()
+    else:
+        world_map = Map()
+
     for i in range(0, n):
         for j in range(0, n):
             index = j*(n) + i

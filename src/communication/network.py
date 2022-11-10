@@ -7,6 +7,7 @@ class Network:
         self.config = config
         self.start_server()
         self.shutdown = False
+        self.position = [0, 0, 0]
 
     def start_server(self):
         host = self.config.get_setting('host')
@@ -49,6 +50,11 @@ class Network:
             self.control_panel.set_target(int(commands[1]), int(commands[2]))
         elif commands[0] == 'i':
             self.control_panel.reset_state(int(commands[1]), int(commands[2]), int(commands[3]))
+        elif commands[0] == 'u':
+            return str(self.position)
         else:
             return "Could not parse command"
         return "OK"
+
+    def update_position_message(self, state):
+        self.position = [state.x, state.y, state.theta]
