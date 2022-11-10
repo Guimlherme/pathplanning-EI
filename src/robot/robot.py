@@ -4,7 +4,7 @@ from threading import Thread
 import time
 import ctypes
 import json
-from constants import CYCLE_TIME
+from constants import CYCLE_TIME, CONTROL_TIME
 
 class Robot:
     def __init__(self, sensing, decision_making, world_map, control_panel, system_clock, network, command_factory, debug=True):
@@ -16,6 +16,8 @@ class Robot:
         self.system_clock = system_clock
         self.network = network
         self.command_factory = command_factory
+        self.control_clock_id = system_clock.get_id()
+        self.control_external_clock_id = system_clock.get_id()
 
         self.target = (0, 0)
         self.target_node = 0
@@ -28,20 +30,22 @@ class Robot:
         self.history = {
                 'x': [], 'y': [], 'theta': [], 
                 'linear_speed': [], 'angular_speed': [], 'object_distance': [],   
-                'localization_elapsed_time': [], 'vision_elapsed_time': [], 
-                'next_waypoint': [], 'current_state': [],     
+                'localization_elapsed_time': [], 'vision_elapsed_time': [], 'control_elapsed_time': [],
+                'next_waypoint': [], 'current_state': [], 
         }
 
     def run(self):
         vision_thread = Thread(target=self.run_vision)
         network_thread = Thread(target=self.network.read)
         remaining_thread = Thread(target=self.run_everything)
+        control_thread = Thread(target=self.run_control)
 
         vision_thread.start()
         network_thread.start()
         remaining_thread.start()
+        control_thread.start()
 
-        self._wait([vision_thread, network_thread, remaining_thread])
+        self._wait([vision_thread, network_thread, remaining_thread, control_thread])
 
     def _wait(self, threads):
         try:
@@ -67,7 +71,7 @@ class Robot:
             if self.control_panel.run:
                 self.execute_cycle()
             else:
-                self.command_factory.stopped().execute(self.state)
+                self.command = self.command_factory.stopped()
                 if len(self.history['x']) > 0:
                     with open('log.txt', 'w') as logfile:
                         logfile.write(json.dumps(self.history))
@@ -85,8 +89,8 @@ class Robot:
 
         right_encoder, left_encoder, obstacle_distance = self.sensing.collect()
         self.state.update_from_sensors(right_encoder, left_encoder, obstacle_distance)
-        command = self.decision_making.decide(self.state, self.target, self.target_node)
-        command.execute(self.state)
+        self.command = self.decision_making.decide(self.state, self.target, self.target_node)
+
         if self.debug:
             self.history['x'].append(self.state.x)
             self.history['y'].append(self.state.y)
@@ -98,3 +102,18 @@ class Robot:
             self.history['object_distance'].append(self.state.obstacle_distance)
             self.history['next_waypoint'].append(self.decision_making.next_waypoint)
             self.history['current_state'].append(self.decision_making.current_state.get_name())
+
+    def run_control(self):
+        while not self.shutdown:
+            _ = self.system_clock.get_elapsed_time_since_last_call(self.control_clock_id) # mark first call
+            self.command.execute(self.state)
+            elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.control_clock_id) # get elapsed time
+            remaining_time = CONTROL_TIME - elapsed_time
+            if remaining_time > 0:
+                time.sleep(remaining_time)
+
+            external_elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.control_external_clock_id) 
+            self.history['control_elapsed_time'].append(external_elapsed_time)
+            
+
+    

@@ -83,8 +83,8 @@ class Forward(Command):
                 
         state.right_wheel_command = w_right
         state.left_wheel_command = w_left
-        print("Left wheel speed: ", w_left)
-        print("Right wheel speed: ", w_right)
+        # print("Left wheel speed: ", w_left)
+        # print("Right wheel speed: ", w_right)
         self.actuators.set_speeds(w_right / (OMEGA_MAX+1.3), w_left / (OMEGA_MAX+1.3))
     
     def get_name(self):
