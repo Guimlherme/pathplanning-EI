@@ -54,7 +54,9 @@ class TurnState:
         self.finished_turning = False
 
     def execute(self, state, target):
-        return self.command_factory.turn(command.RIGHT)
+        if self.angle > 0:
+            return self.command_factory.left_turn()
+        return self.command_factory.right_turn()
 
     def check_transition(self, state, target):
         if angle_diference(state.theta, self.initial_theta)  < np.deg2rad(10):
