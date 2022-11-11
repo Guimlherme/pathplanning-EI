@@ -33,7 +33,12 @@ def client_program(config, map):
     while message.lower().strip() != 'quit':
         client_socket.send(message.encode()) 
         data = client_socket.recv(1024).decode()
-        print('Robot response: ' + str(data)) 
+        if message == 'u':
+            stringlist = list(data.split(" "))
+            intlist = [int(x) for x in stringlist]
+            map.print_with_robot(intlist)
+        else:
+            print('Robot response: ' + str(data))
         message = input(" -> ") 
 
     client_socket.close() 

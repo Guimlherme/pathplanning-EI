@@ -51,7 +51,7 @@ class Network:
         elif commands[0] == 'i':
             self.control_panel.reset_state(int(commands[1]), int(commands[2]), int(commands[3]))
         elif commands[0] == 'u':
-            return str(self.position)
+            return str(self.position[0])+" "+str(self.position[1])+" "+str(self.position[2])
         else:
             return "Could not parse command"
         return "OK"

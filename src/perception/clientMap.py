@@ -1,32 +1,44 @@
-import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle
 from .map import Map
 
 class ClientMap(Map):
 
-    def print(self):
-        plt.figure()
-        for node in self.nodes:
-            plt.scatter(*self.nodes[node], c='#0000FF')
-            for neighbor in self.adjacency_list[node]:
-                # print(self.nodes[node][0])
-                plt.plot([self.nodes[node][0], self.nodes[neighbor][0]],[self.nodes[node][1], self.nodes[neighbor][1]], c='#FF0000')
-        plt.show()
+    def __init__(self):
+        super().__init__()
+        import matplotlib.pyplot as plt
+        from matplotlib.patches import Rectangle
+        self.plt = plt
+        self.Rectangle = Rectangle
 
-    def print_with_robot(self, state):
-        plt.figure()
+    def print(self):
+        self.plt.figure()
         for node in self.nodes:
-            plt.scatter(*self.nodes[node], c='#0000FF')
+            self.plt.scatter(*self.nodes[node], c='#0000FF')
             for neighbor in self.adjacency_list[node]:
                 # print(self.nodes[node][0])
-                plt.plot([self.nodes[node][0], self.nodes[neighbor][0]], [self.nodes[node][1], self.nodes[neighbor][1]],
+                self.plt.plot([self.nodes[node][0], self.nodes[neighbor][0]],[self.nodes[node][1], self.nodes[neighbor][1]], c='#FF0000')
+        self.plt.show()
+
+    def print_with_robot(self, position):
+        x = position[0]
+        y = position[1]
+        theta = position[2]
+        if self.plt.get_fignums():
+            self.plt.clf()
+        else:
+            self.plt.figure()
+
+        for node in self.nodes:
+            self.plt.scatter(*self.nodes[node], c='#0000FF')
+            for neighbor in self.adjacency_list[node]:
+                # print(self.nodes[node][0])
+                self.plt.plot([self.nodes[node][0], self.nodes[neighbor][0]], [self.nodes[node][1], self.nodes[neighbor][1]],
                          c='#FF0000')
         width = 0.1
         height = 0.3
-        plt.gca().add_patch(Rectangle((state.x-width/2, state.y-height/2), width, height,
-                                      angle=rad2deg(state.theta),
+        self.plt.gca().add_patch(self.Rectangle((x-width/2, y-height/2), width, height,
+                                      angle=rad2deg(theta),
                                       edgecolor='green',
                                       facecolor='green',
                                       lw=4,
                                       rotation_point='center'))
-        plt.show()
+        self.plt.show()
