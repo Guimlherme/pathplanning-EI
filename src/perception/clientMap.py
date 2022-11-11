@@ -38,8 +38,8 @@ class ClientMap(Map):
                 self.plt.plot([self.nodes[node][0], self.nodes[neighbor][0]], [self.nodes[node][1], self.nodes[neighbor][1]],
                          c='#FF0000')
 
-        width = 0.1 * 100
-        height = 0.3 * 100
+        width = 0.3 * 100
+        height = 0.1 * 100
         self.plt.gca().add_patch(self.Rectangle((x-width/2, y-height/2), width, height,
                                       angle=rad2deg(theta),
                                       edgecolor='green',
