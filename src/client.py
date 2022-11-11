@@ -42,7 +42,6 @@ def client_program(config, map):
                 input_ready, _, _ = select.select([sys.stdin], [], [], 0.1)
                 for sender in input_ready:
                     if sender == sys.stdin:
-                        print("wtf lol")
                         user_input = input()
                 if user_input is None:
                     stringlist = list(data.split(" "))
