@@ -32,7 +32,8 @@ class Network:
             data = conn.recv(1024).decode()
             if not data:
                 break # if data is not received break
-            print("Received from network: " + str(data))
+            if str(data) != 'u':
+                print("Received from network: " + str(data))
             result = self.parse(data)
             conn.send(result.encode()) 
         conn.close() 

@@ -1,5 +1,7 @@
 from .map import Map
 
+from numpy import rad2deg
+
 class ClientMap(Map):
 
     def __init__(self):
@@ -26,6 +28,8 @@ class ClientMap(Map):
             self.plt.clf()
         else:
             self.plt.figure()
+            self.plt.ion()
+            self.plt.show(block=False)
 
         for node in self.nodes:
             self.plt.scatter(*self.nodes[node], c='#0000FF')
@@ -33,12 +37,13 @@ class ClientMap(Map):
                 # print(self.nodes[node][0])
                 self.plt.plot([self.nodes[node][0], self.nodes[neighbor][0]], [self.nodes[node][1], self.nodes[neighbor][1]],
                          c='#FF0000')
-        width = 0.1
-        height = 0.3
+
+        width = 0.1 * 100
+        height = 0.3 * 100
         self.plt.gca().add_patch(self.Rectangle((x-width/2, y-height/2), width, height,
                                       angle=rad2deg(theta),
                                       edgecolor='green',
                                       facecolor='green',
                                       lw=4,
                                       rotation_point='center'))
-        self.plt.show()
+        self.plt.pause(0.05)

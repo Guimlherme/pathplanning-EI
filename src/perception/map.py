@@ -1,5 +1,5 @@
 from math import sqrt
-from numpy import deg2rad
+
 #import matplotlib.pyplot as plt
 #from matplotlib.patches import Rectangle
 
@@ -38,7 +38,7 @@ class Map:
                 min_dist_node = neighbor
 
         return min_dist_node
-    
+
 
     def get_closest_node(self, x, y):
         # -1 to know it is the first
