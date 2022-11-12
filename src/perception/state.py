@@ -81,7 +81,7 @@ class State:
 
         with self.lock:
             self.previous_line_angle = self.line_angle
-            self.line_angle += self.angular_speed * elapsed_time
+            self.line_angle -= self.angular_speed * elapsed_time # Camera referential is the opposite from world
 
         self.obstacle_distance = obstacle_distance
         self.localization_elapsed_time = elapsed_time
