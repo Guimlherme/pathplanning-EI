@@ -1,6 +1,9 @@
 import socket
 import json
 import time
+from maps import get_grid_map
+import sys
+import select
 
 def get_connection(host, port):
     client_socket = socket.socket()  
@@ -21,7 +24,7 @@ def get_connection(host, port):
         raise Exception('Could not connect')
     return client_socket
 
-def client_program(config):
+def client_program(config, map):
     host = config['host']
     port = config['port']
 
@@ -32,7 +35,26 @@ def client_program(config):
     while message.lower().strip() != 'quit':
         client_socket.send(message.encode()) 
         data = client_socket.recv(1024).decode()
-        print('Robot response: ' + str(data)) 
+        if message == 'u':
+            print("Press enter to stop updating map")
+            user_input = None
+            while True:
+                input_ready, _, _ = select.select([sys.stdin], [], [], 0.1)
+                for sender in input_ready:
+                    if sender == sys.stdin:
+                        user_input = input()
+                if user_input is None:
+                    stringlist = list(data.split(" "))
+                    floatlist = [float(x) for x in stringlist]
+                    map.print_with_robot(floatlist)
+                else:
+                    # user input done
+                    break
+                time.sleep(0.5) # map/input update time
+                client_socket.send(message.encode())
+                data = client_socket.recv(1024).decode()
+        else:
+            print('Robot response: ' + str(data))
         message = input(" -> ") 
 
     client_socket.close() 
@@ -41,4 +63,5 @@ def client_program(config):
 if __name__ == '__main__':
     with open("config.json", "r") as f:
         config = json.load(f)
-    client_program(config)
+    map = get_grid_map(client=True)
+    client_program(config, map)
