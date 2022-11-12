@@ -1,7 +1,7 @@
 import socket
 import json
 import time
-from maps import get_grid_map
+from maps import get_grid_map, get_quarto_map
 import sys
 import select
 

@@ -6,7 +6,7 @@ from robot import ControlPanel, Robot
 from config import Configs
 from clock import SystemClock
 from command import CommandFactory
-from maps import get_trivial_map, get_grid_map
+from maps import get_trivial_map, get_grid_map, get_quarto_map
 
 from infrastructure.mock import MockSensors, MockActuators
 
