@@ -3,6 +3,10 @@ import numpy as np
 
 
 def preprocessing_image(image,save_photos=False):
+  # Cropping image
+
+  image = image[int(0.4 * image.shape[0]):int(0.99 * image.shape[0]),
+          int(0.15 * image.shape[1]):int(0.75 * image.shape[1])]
 
   # Reescalling
   scale_percent = 30 # percent of original size
