@@ -105,6 +105,7 @@ class TurnState:
         return self.command_factory.right_turn()
 
     def check_transition(self, state, target, target_node):
+        print("Angle difference: ", state.theta - self.initial_theta, self.angle)
         if angle_diference(state.theta - self.initial_theta, self.angle)  < FINISH_TURN_ANGLE_THRESHOLD:
             self.finished_turning = True
         if self.finished_turning and not state.obstacle_detected:

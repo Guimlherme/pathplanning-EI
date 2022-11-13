@@ -78,20 +78,27 @@ class State:
         # Updating map state
         self.previous_theta = self.theta
         if self.next_waypoint is not None:
-            theta_est = self.theta + self.angular_speed * elapsed_time
-            theta_est %= 2 * pi
-            x_est = self.x + self.linear_speed * cos(self.theta) * elapsed_time
-            y_est = self.y + self.linear_speed * sin(self.theta) * elapsed_time
-            [self.x, self.y, self.theta] = self.world_map.find_position_on_grid(x_est, y_est, theta_est,
-                                                                                self.node, self.next_waypoint)
+            next_waypoint_pos = self.world_map.nodes[self.next_waypoint]
+            cos_angulardelta = np.dot(self.y - next_waypoint_pos[1], self.x - next_waypoint_pos[0]) / \
+                               (np.linalg.norm([self.x, self.y]) * np.linalg.norm(next_waypoint_pos))
+            if cos_angulardelta > sqrt(3)/2:
+                theta_est = self.theta + self.angular_speed * elapsed_time
+                theta_est %= 2 * pi
+                x_est = self.x + self.linear_speed * cos(self.theta) * elapsed_time
+                y_est = self.y + self.linear_speed * sin(self.theta) * elapsed_time
+                [self.x, self.y, self.theta] = self.world_map.find_position_on_grid(x_est, y_est, theta_est,
+                                                                                    self.node, self.next_waypoint)
+            else:
+                self.theta += self.angular_speed * elapsed_time
+                self.theta %= 2 * pi
+                self.x += self.linear_speed * cos(self.theta) * elapsed_time
+                self.y += self.linear_speed * sin(self.theta) * elapsed_time
         else:
             self.theta += self.angular_speed * elapsed_time
             self.theta %= 2 * pi
             self.x += self.linear_speed * cos(self.theta) * elapsed_time
             self.y += self.linear_speed * sin(self.theta) * elapsed_time
 
-        self.x += self.linear_speed * cos(self.theta) * elapsed_time
-        self.y += self.linear_speed * sin(self.theta) * elapsed_time
 
         self.node = self.identify_node()
 
