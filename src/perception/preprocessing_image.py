@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from constants import ONE_LINE_MAP,MINIMUM_AREA,DISTANCE_BETWEEN_LINES
 
 def preprocessing_one_line(image,save_photos=False):
   # Cropping image
