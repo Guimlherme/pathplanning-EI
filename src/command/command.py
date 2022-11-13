@@ -54,15 +54,15 @@ class Forward(Command):
         self.command = 0
         
         # Need for non-linear interpolation
-        self.yp_left = [0.0, 1.193805, 2.513274, 3.455752, 4.335398,5.529203,
+        self.xp_left = [0.0, 1.193805, 2.513274, 3.455752, 4.335398,5.529203,
                         6.09469, 6.78584, 7.476991, 8.419468,8.859291,9.801769,
                         10.430088, 10.995574, 11.812388, 12.189379, 12.377875,13.006194]
 
-        self.yp_right = [0.0, 0.376991, 2.638938, 3.832743, 4.838053, 5.78053, 6.471681,
+        self.xp_right = [0.0, 0.376991, 2.638938, 3.832743, 4.838053, 5.78053, 6.471681,
                          7.162831, 7.539822, 7.853982, 8.293805, 8.356636, 8.607964,
                          8.796459, 8.796459, 9.047787, 9.48761, 9.990265]
 
-        self.xp = [.10, .20, .25, .30, .35, .40, .45, .50, .55, .60, .65, .70, .75, .80, .85, .90, .95, 1.00]
+        self.yp = [.10, .20, .25, .30, .35, .40, .45, .50, .55, .60, .65, .70, .75, .80, .85, .90, .95, 1.00]
 
     def execute(self, state):
 
@@ -93,9 +93,9 @@ class Forward(Command):
                 w_right = 2*(1/WHEEL_RADIUS)*(ROBOT_SPEED) - (OMEGA_MAX)
                 
         #if w_left > OMEGA_NON_LINEAR or w_right > OMEGA_NON_LINEAR:
-        w_left = np.interp(w_left,self.xp,self.yp_left)
-        w_right = np.interp(w_right,self.xp,self.yp_right)
-        print("Interp", np.interp(w_left,self.xp,self.yp_left))
+        w_left = np.interp(w_left,self.xp_left,self.yp)
+        w_right = np.interp(w_right,self.xp_right,self.yp)
+        print("Interp", np.interp(w_left,self.xp_left,self.yp))
                 
         state.right_wheel_command = w_right
         state.left_wheel_command = w_left
