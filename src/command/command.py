@@ -71,9 +71,10 @@ class Forward(Command):
         phi = state.line_angle
         previous_phi= state.previous_line_angle
 
-        u  = CONTROL_PARAMETERS['u']['k-1']*privious_command
-        u += CONTROL_PARAMETERS['phi']['k']*phi 
-        u += CONTROL_PARAMETERS['phi']['k-1']*previous_phi
+        #u  = CONTROL_PARAMETERS['u']['k-1']*privious_command
+        #u += CONTROL_PARAMETERS['phi']['k']*phi 
+        #u += CONTROL_PARAMETERS['phi']['k-1']*previous_phi
+        u = 50*phi
 
         self.command = u
 
