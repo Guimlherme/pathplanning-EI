@@ -1,7 +1,7 @@
 import numpy as np 
 import time
 from math import floor, tan, sqrt, atan2, pi
-from constants import DISTANCE_THRESHOLD
+from constants import OBSTACLE_THRESHOLD
 
 class MockSensors:
     def __init__(self, system_clock, simulation, debug=False):
@@ -44,11 +44,12 @@ class MockSensors:
             robot_to_object_angle = atan2(robot_to_object[1], robot_to_object[0])
 
             angle = angle_diference(robot_to_object_angle, self.simulation.theta)
+            print("Simulation ", self.simulation.x, self.simulation.y)
             print("Obstacle ", i, "distance", dist, "angle", angle)
             print("Position ", obj, " m ", m, "A", A, "B", B)
             print("Theta used", self.simulation.theta)
 
-            if dist < DISTANCE_THRESHOLD and angle < np.deg2rad(90):
+            if dist < OBSTACLE_THRESHOLD and angle < np.deg2rad(90):
                 aligned_objects.append(obj)
 
         if len(aligned_objects) == 0:

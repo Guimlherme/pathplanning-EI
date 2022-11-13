@@ -1,5 +1,5 @@
 from .map import Map
-from constants import DISTANCE_THRESHOLD, WHEEL_DIST
+from constants import DISTANCE_THRESHOLD, WHEEL_DIST, OBSTACLE_THRESHOLD, OBSTACLE_DETECTED_CYCLE_THRESHOLD
 from .preprocessing_image import preprocessing_image
 from .astar import find_path
 
@@ -7,10 +7,6 @@ from math import sin, cos, pi, sqrt
 import numpy as np
 
 from threading import Lock
-
-# An obstacle is considered as detected if it is closer than OBSTACLE_THRESHOLD for at least OBSTACLE_CYCLE_THRESHOLD cycles
-OBSTACLE_THRESHOLD = 50
-OBSTACLE_DETECTED_CYCLE_THRESHOLD = 10
 
 
 class State:

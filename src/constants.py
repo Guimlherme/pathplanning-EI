@@ -8,6 +8,10 @@ DISTANCE_THRESHOLD = 20 # cm
 # CYCLE_TIME = 30e-3 # s
 # DISTANCE_THRESHOLD = 5 # cm
 
+# An obstacle is considered as detected if it is closer than OBSTACLE_THRESHOLD for at least OBSTACLE_CYCLE_THRESHOLD cycles
+OBSTACLE_THRESHOLD = 50
+OBSTACLE_DETECTED_CYCLE_THRESHOLD = 10
+
 FINISH_TURN_ANGLE_THRESHOLD = np.deg2rad(5) 
 TURN_ANGLE_THRESHOLD = np.deg2rad(35)
 
