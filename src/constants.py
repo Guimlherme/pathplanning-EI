@@ -7,9 +7,10 @@ import numpy as np
 # Values used for simulation
 CYCLE_TIME = 30e-3 # s
 DISTANCE_THRESHOLD = 20 # cm
+OBSTACLE_THRESHOLD = 40 # cm
 
 FINISH_TURN_ANGLE_THRESHOLD = np.deg2rad(5) 
-TURN_ANGLE_THRESHOLD = np.deg2rad(35)
+TURN_ANGLE_THRESHOLD = np.deg2rad(5)
 
 WHEEL_DIST = 15.2 # centimeters
 

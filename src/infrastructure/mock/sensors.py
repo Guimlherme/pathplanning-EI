@@ -48,7 +48,7 @@ class MockSensors:
             print("Position ", obj, " m ", m, "A", A, "B", B)
             print("Theta used", self.simulation.theta)
 
-            if dist < DISTANCE_THRESHOLD and angle < np.deg2rad(90):
+            if dist < 2*DISTANCE_THRESHOLD and angle < np.deg2rad(90):
                 aligned_objects.append(obj)
 
         if len(aligned_objects) == 0:

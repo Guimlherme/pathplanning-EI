@@ -1,5 +1,5 @@
 from .map import Map
-from constants import DISTANCE_THRESHOLD, WHEEL_DIST
+from constants import DISTANCE_THRESHOLD, WHEEL_DIST, OBSTACLE_THRESHOLD
 from .preprocessing_image import preprocessing_image
 from .astar import find_path
 
@@ -9,7 +9,6 @@ import numpy as np
 from threading import Lock
 
 # An obstacle is considered as detected if it is closer than OBSTACLE_THRESHOLD for at least OBSTACLE_CYCLE_THRESHOLD cycles
-OBSTACLE_THRESHOLD = 50
 OBSTACLE_DETECTED_CYCLE_THRESHOLD = 10
 
 
@@ -77,7 +76,7 @@ class State:
 
         # Updating map state
         self.previous_theta = self.theta
-        if self.next_waypoint is not None:
+        if False:
             next_waypoint_pos = self.world_map.nodes[self.next_waypoint]
             cos_angulardelta = np.dot(self.y - next_waypoint_pos[1], self.x - next_waypoint_pos[0]) / \
                                (np.linalg.norm([self.x, self.y]) * np.linalg.norm(next_waypoint_pos))
@@ -148,7 +147,11 @@ class State:
 
     def intersection_detected(self) -> bool:
         for node, node_position in self.world_map.nodes.items():
-            if self.position_is(node_position):
+            PARALEL_THRESHOLD = 5
+            PERPENDICULAR_THRESHOLD = 20
+            if (abs(self.x - node_position[0]) < PARALEL_THRESHOLD and abs(self.y - node_position[1]) < PERPENDICULAR_THRESHOLD) \
+                or (abs(self.x - node_position[0]) < PERPENDICULAR_THRESHOLD and abs(self.y - node_position[1]) < PARALEL_THRESHOLD):
+                print("Intersection detected", node_position)
                 return True
         return False
 

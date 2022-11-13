@@ -48,11 +48,6 @@ class ForwardState:
 
     def check_transition(self, state, target, target_node,  next_waypoint):
         changed_target = False
-        # if state.obstacle_detected:
-        #     print("REMOVING EDGE", state.node, state.obstacle_node)
-        #     state.world_map.remove_edge(state.node, state.obstacle_node)
-        #     state.update_next_waypoint(target_node)
-
         if self.next_waypoint != state.next_waypoint:
             print("Changed waypoint!")
             changed_target = True
