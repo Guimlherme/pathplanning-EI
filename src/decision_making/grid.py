@@ -41,6 +41,7 @@ class GridDecisionMaking:
         if path is None:
             return state.node
         path_list = list(path)
+        print("Path: ", path_list)
         if len(path_list) == 0:
             return state.node
         if len(path_list) == 1:

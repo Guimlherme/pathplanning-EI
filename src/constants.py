@@ -1,8 +1,8 @@
 import numpy as np
 
-CYCLE_TIME = 120e-3 # s
+CYCLE_TIME = 30e-3 # s
 DISTANCE_THRESHOLD = 10 # cm
-FINISH_TURN_ANGLE_THRESHOLD = np.deg2rad(15) # rad
+FINISH_TURN_ANGLE_THRESHOLD = np.deg2rad(5) # rad
 TURN_ANGLE_THRESHOLD = np.deg2rad(35)
 
 WHEEL_DIST = 15.2 # centimeters
@@ -23,3 +23,6 @@ CONTROL_PARAMETERS = {
             'k-1':-(2*(TAU+TD)*(WN**2))/(4+TD*WN*(4*XI+TAU*WN))},
      'u':{'k-1':(4-TD*WN*(4*XI+TAU*WN))/(4+TD*WN*(4*XI+TAU*WN))},
 }
+# 0 1 2 3
+# 5 6 7 8 9
+# 0 1 2 3 4

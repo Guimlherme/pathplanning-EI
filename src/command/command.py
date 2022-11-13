@@ -95,7 +95,12 @@ class Forward(Command):
 
         w_left = np.interp(w_left,self.xp_left,self.yp)
         w_right = np.interp(w_right,self.xp_right,self.yp)
-                
+
+# TODO: remove from
+        w_left = 1
+        w_right = 1  
+# TODO: remove until
+
         state.right_wheel_command = w_right
         state.left_wheel_command = w_left
         print("Left wheel speed: ", w_left)
