@@ -41,6 +41,8 @@ system_clock = SystemClock()
 if args.mock:
     simulation = Simulation(system_clock)
     simulation.add_obstacle(100, 100)
+    simulation.add_obstacle(200, 200)
+    simulation.add_obstacle(300, 100)
     sensors = MockSensors(system_clock, simulation, debug=debug)
     actuators = MockActuators(simulation)
 else:

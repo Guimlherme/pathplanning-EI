@@ -83,6 +83,7 @@ class Robot:
                 time.sleep(remaining_time)
 
     def execute_cycle(self):
+        print("Set target ", self.control_panel.target, self.target)
         if self.control_panel.target != self.target:
             self.target = self.control_panel.target
             self.target_node = self.state.world_map.get_closest_node(self.target[0], self.target[1])

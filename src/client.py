@@ -50,7 +50,7 @@ def client_program(config, map):
                 else:
                     # user input done
                     break
-                time.sleep(0.5) # map/input update time
+                time.sleep(0.1) # map/input update time
                 client_socket.send(message.encode())
                 data = client_socket.recv(1024).decode()
         else:

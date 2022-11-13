@@ -1,4 +1,4 @@
-from math import sqrt, atan2
+from math import sqrt, atan2, pi
 
 #import matplotlib.pyplot as plt
 #from matplotlib.patches import Rectangle
@@ -7,6 +7,9 @@ class Map:
     def __init__(self):
         self.nodes = {}
         self.adjacency_list = { }
+
+    def print(self):
+        print(self.adjacency_list)
 
     def add_node(self, i, x, y):
         self.nodes[i] = (x, y)
@@ -18,6 +21,9 @@ class Map:
     def remove_edge(self, node1, node2):
         self.adjacency_list[node1].remove(node2)
         self.adjacency_list[node2].remove(node1)
+
+    def has_edge(self, node1, node2):
+        return node2 in self.adjacency_list.get(node1, []) 
 
     def _add_directed_edge(self, node1, node2):
         if node1 not in self.adjacency_list:
@@ -47,6 +53,7 @@ class Map:
 
         for neighbor, position in self.nodes.items():
             dist = sqrt( (position[0] - x)**2 + (position[1] - y)**2)
+            print(neighbor, dist, min_dist)
             if dist < min_dist or min_dist == -1:
                 min_dist = dist
                 min_dist_node = neighbor
@@ -60,7 +67,7 @@ class Map:
         vect = [next_pos[0] - current_pos[0], next_pos[1] - current_pos[1]]
 
         factor = (vect[0] * (x - current_pos[0]) + vect[1] * (y - current_pos[1])) / (vect[0] ** 2 + vect[1] ** 2)
-        return [current_pos[0] + factor * vect[0], current_pos[1] + factor * vect[1], atan2(vect[1], vect[0])]
+        return [current_pos[0] + factor * vect[0], current_pos[1] + factor * vect[1], atan2(vect[1], vect[0])%(2*pi)]
 
 
 
