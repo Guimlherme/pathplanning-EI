@@ -1,5 +1,6 @@
 from math import pi, sin, cos
 from constants import DISTANCE_THRESHOLD, WHEEL_DIST
+import numpy as np 
 
 class Simulation:
     def __init__(self, system_clock) -> None:
@@ -16,9 +17,20 @@ class Simulation:
         self.right_encoder_value = 0
         self.left_encoder_value = 0
 
+        self.obstacle_positions = [ ]
+        
+    def add_obstacle(self, x, y):
+        self.obstacle_positions.append( (x, y) )
+
     def update(self):
-        self.linear_speed = (self.right_speed + self.left_speed)/2
-        self.angular_speed = (self.right_speed - self.left_speed)/WHEEL_DIST
+        # Stop when hit
+        for obj in self.obstacle_positions:
+            if np.linalg.norm(np.array([self.x, self.y]) - np.array(obj)) < 10:
+                self.right_speed = 0
+                self.left_speed = 0
+
+        self.linear_speed = 100*(self.right_speed + self.left_speed)/2
+        self.angular_speed = 100*(self.right_speed - self.left_speed)/WHEEL_DIST
         print("\nAngular: ", self.right_speed, self.left_speed, self.angular_speed)
 
         elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.clock_id)
@@ -32,4 +44,3 @@ class Simulation:
         self.theta %= 2*pi
         self.x += self.linear_speed * cos(self.theta) * elapsed_time 
         self.y += self.linear_speed * sin(self.theta) * elapsed_time 
-        # Will we update the ultrassound distance in simulation? 

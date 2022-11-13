@@ -65,6 +65,8 @@ class Robot:
         clock_id = self.system_clock.get_id()
         while not self.shutdown:
             _ = self.system_clock.get_elapsed_time_since_last_call(clock_id) # mark first call
+            if self.simulation is not None:
+                self.simulation.update()
             if self.control_panel.run:
                 self.execute_cycle()
             else:
@@ -73,8 +75,7 @@ class Robot:
                     with open('log.txt', 'w') as logfile:
                         logfile.write(json.dumps(self.history))
                     self.reset_history()
-            if self.simulation is not None:
-                self.simulation.update()
+            
                 
             elapsed_time = self.system_clock.get_elapsed_time_since_last_call(clock_id) # get elapsed time
             remaining_time = CYCLE_TIME - elapsed_time
