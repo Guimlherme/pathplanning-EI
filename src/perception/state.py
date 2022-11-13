@@ -94,6 +94,16 @@ class State:
                 self.obstacle_detected = True
         else:
             self.obstacle_detected = False
+
+
+        if self.obstacle_detected:
+            obstacle_x = self.x + obstacle_distance * cos(self.theta)
+            obstacle_y = self.y + obstacle_distance * sin(self.theta)
+            # print("REMOVING EDGE", self.node, self.obstacle_node)
+            obstacle_node = self.world_map.get_closest_node(obstacle_x, obstacle_y)
+            if self.world_map.has_edge(self.node, obstacle_node):
+                self.world_map.remove_edge(self.node, obstacle_node)
+
         
         if self.debug:
             print("Encoders: ", right_encoder, left_encoder)
@@ -131,8 +141,11 @@ class State:
         self.next_waypoint = self.plan(target_node)
         
     def plan(self, target_node):
+        self.world_map.print()
+        print("Searching from ", self.node, target_node)
         path = find_path(self.world_map, self.node, target_node)
         if path is None:
+            print("PATH NOT FOUND")
             return self.node
         path_list = list(path)
         print("Path: ", path_list)

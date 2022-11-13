@@ -1,6 +1,7 @@
 import numpy as np 
 import time
 from math import floor, tan, sqrt, atan2, pi
+from constants import DISTANCE_THRESHOLD
 
 class MockSensors:
     def __init__(self, system_clock, simulation, debug=False):
@@ -47,7 +48,7 @@ class MockSensors:
             print("Position ", obj, " m ", m, "A", A, "B", B)
             print("Theta used", self.simulation.theta)
 
-            if dist < 10 and angle < np.deg2rad(90):
+            if dist < DISTANCE_THRESHOLD and angle < np.deg2rad(90):
                 aligned_objects.append(obj)
 
         if len(aligned_objects) == 0:

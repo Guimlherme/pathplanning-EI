@@ -25,13 +25,12 @@ class Simulation:
     def update(self):
         # Stop when hit
         for obj in self.obstacle_positions:
-            if np.linalg.norm(np.array([self.x, self.y]) - np.array(obj)) < 10:
+            if np.linalg.norm(np.array([self.x, self.y]) - np.array(obj)) < DISTANCE_THRESHOLD:
                 self.right_speed = 0
                 self.left_speed = 0
 
         self.linear_speed = 100*(self.right_speed + self.left_speed)/2
         self.angular_speed = 100*(self.right_speed - self.left_speed)/WHEEL_DIST
-        print("\nAngular: ", self.right_speed, self.left_speed, self.angular_speed)
 
         elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.clock_id)
 

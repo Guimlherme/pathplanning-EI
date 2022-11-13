@@ -95,8 +95,8 @@ class Forward(Command):
                 
 
         if self.simulation:
-            w_right = w_right / OMEGA_MAX
-            w_left = w_left / OMEGA_MAX
+            w_right = 1
+            w_left = 1
         else:
             w_left = np.interp(w_left,self.xp_left,self.yp)
             w_right = np.interp(w_right,self.xp_right,self.yp)
