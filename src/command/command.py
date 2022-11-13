@@ -92,10 +92,9 @@ class Forward(Command):
                 w_left = OMEGA_MAX
                 w_right = 2*(1/WHEEL_RADIUS)*(ROBOT_SPEED) - (OMEGA_MAX)
                 
-        #if w_left > OMEGA_NON_LINEAR or w_right > OMEGA_NON_LINEAR:
+
         w_left = np.interp(w_left,self.xp_left,self.yp)
         w_right = np.interp(w_right,self.xp_right,self.yp)
-        print("Interp", np.interp(w_left,self.xp_left,self.yp))
                 
         state.right_wheel_command = w_right
         state.left_wheel_command = w_left
