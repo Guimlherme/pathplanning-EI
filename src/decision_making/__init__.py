@@ -1,1 +1,2 @@
-from .decision_making import DecisionMaking
+from .grid import GridDecisionMaking
+from .simple import SimpleDecisionMaking

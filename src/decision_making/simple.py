@@ -3,7 +3,7 @@ import command
 from math import pi
 
 # SimpleDecisionMaking only go forward and does a half turn when finds an obstacle. Ignores intersection and path planning
-class DecisionMaking:
+class SimpleDecisionMaking:
     def __init__(self, command_factory, debug=False):
         self.command_factory = command_factory
         self.debug = debug
@@ -16,7 +16,7 @@ class DecisionMaking:
             self.current_state = next_state
 
         if self.debug:
-            print("Decision Making:", command.get_name())
+            print("Simple Decision Making:", command.get_name())
         return command
 
 class ForwardState:
