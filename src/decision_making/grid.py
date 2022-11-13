@@ -5,7 +5,7 @@ from math import pi, cos, sin, atan2
 
 from constants import TURN_ANGLE_THRESHOLD, FINISH_TURN_ANGLE_THRESHOLD
 
-class DecisionMaking:
+class GridDecisionMaking:
     def __init__(self, command_factory, debug=False):
         self.command_factory = command_factory
         self.debug = debug
@@ -25,7 +25,7 @@ class DecisionMaking:
             self.current_state = next_state
             
         if self.debug:
-            print("Decision Making:", command.get_name(), "\n")
+            print("Grid Decision Making:", command.get_name(), "\n")
         return command
 
     def need_half_turn(self, state, waypoint):

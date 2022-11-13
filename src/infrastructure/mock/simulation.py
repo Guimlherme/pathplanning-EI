@@ -11,7 +11,7 @@ class Simulation:
 
         self.right_speed = 0 
         self.left_speed = 0
-        self.distance = 0
+        self.distance = 999
 
         self.right_encoder_value = 0
         self.left_encoder_value = 0
