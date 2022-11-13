@@ -1,6 +1,6 @@
 RIGHT = 1
 LEFT = -1
-from constants import WHEEL_RADIUS,ROBOT_SPEED,ROBOT_WIDTH,OMEGA_MAX,CONTROL_PARAMETERS
+from constants import WHEEL_RADIUS,ROBOT_SPEED_MAX,ROBOT_WIDTH,OMEGA_MAX,CONTROL_PARAMETERS,DEL_SPEED_DEL_PSI
 import numpy as np
 
 class Command:
@@ -62,36 +62,43 @@ class Forward(Command):
                          7.162831, 7.539822, 7.853982, 8.293805, 8.356636, 8.607964,
                          8.796459, 8.796459, 9.047787, 9.48761, 9.990265]
 
-        self.yp = [.10, .20, .25, .30, .35, .40, .45, .50, .55, .60, .65, .70, .75, .80, .85, .90, .95, 1.00]
+        self.yp = [0.10, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55,
+                   0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95, 1.00]
+        
+        self.speed = ROBOT_SPEED_MAX
         self.simulation = simulation
+        
+    def update_speed(self,psi):
+        return ROBOT_SPEED_MAX - DEL_SPEED_DEL_PSI*np.abs(psi)
 
     def execute(self, state):
 
         privious_command = self.command
-        phi = state.line_angle
-        previous_phi= state.previous_line_angle
+        psi = state.line_angle
+        previous_psi= state.previous_line_angle
 
         u  = CONTROL_PARAMETERS['u']['k-1']*privious_command
-        u += CONTROL_PARAMETERS['phi']['k']*phi 
-        u += CONTROL_PARAMETERS['phi']['k-1']*previous_phi
+        u += CONTROL_PARAMETERS['phi']['k']*psi 
+        u += CONTROL_PARAMETERS['phi']['k-1']*previous_psi
 
         self.command = u
+        self.speed = self.update_speed(psi)
 
         if u > 0:
-            w_right = (ROBOT_SPEED+((ROBOT_WIDTH/2)*u))/WHEEL_RADIUS
-            w_left = (ROBOT_SPEED-((ROBOT_WIDTH/2)*u))/WHEEL_RADIUS
+            w_right = (self.speed+((ROBOT_WIDTH/2)*u))/WHEEL_RADIUS
+            w_left = (self.speed-((ROBOT_WIDTH/2)*u))/WHEEL_RADIUS
 
             if w_right > OMEGA_MAX:
                 w_right = OMEGA_MAX
-                w_left = 2*(1/WHEEL_RADIUS)*(ROBOT_SPEED) - (OMEGA_MAX)
+                w_left = 2*(1/WHEEL_RADIUS)*(self.speed) - (OMEGA_MAX)
         else:
             u = np.abs(u)
-            w_right = (ROBOT_SPEED-((ROBOT_WIDTH/2)*u))/WHEEL_RADIUS
-            w_left = (ROBOT_SPEED+((ROBOT_WIDTH/2)*u))/WHEEL_RADIUS
+            w_right = (self.speed-((ROBOT_WIDTH/2)*u))/WHEEL_RADIUS
+            w_left = (self.speed+((ROBOT_WIDTH/2)*u))/WHEEL_RADIUS
 
             if w_left > OMEGA_MAX:
                 w_left = OMEGA_MAX
-                w_right = 2*(1/WHEEL_RADIUS)*(ROBOT_SPEED) - (OMEGA_MAX)
+                w_right = 2*(1/WHEEL_RADIUS)*(self.speed) - (OMEGA_MAX)
                 
 
         if self.simulation:
