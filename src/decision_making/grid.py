@@ -1,5 +1,4 @@
 import numpy as np
-from .astar import find_path
 import command
 from math import pi, cos, sin, atan2
 
@@ -12,15 +11,14 @@ class GridDecisionMaking:
         self.current_state = StoppedState(command_factory)
 
     def decide(self, state, target, target_node):
-        next_waypoint = self.plan(state, target_node)
-        self.next_waypoint = next_waypoint
+        self.next_waypoint = state.next_waypoint
         print("Current node: ", state.node)
         print("Target: ", target)
         print("Target node:", target_node)
-        print("Next waypoint: ", next_waypoint)
+        print("Next waypoint: ", state.next_waypoint)
 
-        command = self.current_state.execute(state, target, next_waypoint)
-        next_state = self.current_state.check_transition(state, target, next_waypoint)
+        command = self.current_state.execute(state, target, state.next_waypoint)
+        next_state = self.current_state.check_transition(state, target, state.next_waypoint)
         if next_state is not None:
             self.current_state = next_state
             
@@ -35,20 +33,6 @@ class GridDecisionMaking:
         v2 = waypoint - posR
         product = np.dot(v1, v2)
         return product < 0
-
-    def plan(self, state, target_node):
-        path = find_path(state.world_map, state.node, target_node)
-        if path is None:
-            return state.node
-        path_list = list(path)
-        print("Path: ", path_list)
-        if len(path_list) == 0:
-            return state.node
-        if len(path_list) == 1:
-            return path_list[0]
-        next_waypoint = path_list[1]
-        return next_waypoint
-
 
 class ForwardState:
     def __init__(self, command_factory):

@@ -1,6 +1,7 @@
 from .map import Map
 from constants import DISTANCE_THRESHOLD, WHEEL_DIST
 from .preprocessing_image import preprocessing_image
+from .astar import find_path
 
 from math import sin, cos, pi, sqrt
 import numpy as np
@@ -77,7 +78,7 @@ class State:
         self.x += self.linear_speed * cos(self.theta) * elapsed_time 
         self.y += self.linear_speed * sin(self.theta) * elapsed_time 
         
-        self.node = self.world_map.get_closest_neighbor(self.node, self.x, self.y)
+        self.node = self.identify_node()
 
         with self.lock:
             self.previous_line_angle = self.line_angle
@@ -118,3 +119,26 @@ class State:
             if self.position_is(node_position):
                 return True
         return False
+
+    def identify_node(self):
+        for node in self.world_map.adjacency_list[self.node]:
+            node_position = self.world_map.nodes[node]
+            if self.position_is(node_position):
+                return node
+        return self.node
+
+    def update_next_waypoint(self, target_node):
+        self.next_waypoint = self.plan(target_node)
+        
+    def plan(self, target_node):
+        path = find_path(self.world_map, self.node, target_node)
+        if path is None:
+            return self.node
+        path_list = list(path)
+        print("Path: ", path_list)
+        if len(path_list) == 0:
+            return self.node
+        if len(path_list) == 1:
+            return path_list[0]
+        next_waypoint = path_list[1]
+        return next_waypoint
