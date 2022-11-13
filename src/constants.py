@@ -10,7 +10,7 @@ WHEEL_DIST = 15.2 # centimeters
 ROBOT_WIDTH = 0.152 # m
 ROBOT_SPEED = 0.22 # m/s
 WHEEL_RADIUS = 0.0325 # m
-OMEGA_MAX = 10.00 # rad/s
+OMEGA_MAX = 9.50 # rad/s
 OMEGA_NON_LINEAR = 7.5 # rad/s
 
 # CONTROL LAW PARAMETERS
