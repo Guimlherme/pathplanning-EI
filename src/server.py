@@ -52,7 +52,7 @@ else:
     sensors = ArduinoSensors(arduino, debug=debug)
 
 # Build remaining dependencies
-command_factory = CommandFactory(actuators)
+command_factory = CommandFactory(actuators, simulation=args.mock)
 sensing = Sensing(sensors, system_clock, debug=True)
 network = Network(control_panel, configs)
 

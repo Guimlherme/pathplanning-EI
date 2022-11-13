@@ -11,7 +11,6 @@ class GridDecisionMaking:
         self.current_state = StoppedState(command_factory)
 
     def decide(self, state, target, target_node):
-        self.next_waypoint = state.next_waypoint
         print("Current node: ", state.node)
         print("Target: ", target)
         print("Target node:", target_node)
