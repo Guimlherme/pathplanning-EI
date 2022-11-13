@@ -1,11 +1,7 @@
 import numpy as np
 
 # Values used for real robot
-# CYCLE_TIME = 120e-3 # s
-# DISTANCE_THRESHOLD = 10 # cm
-
-# Values used for simulation
-CYCLE_TIME = 30e-3 # s
+CYCLE_TIME = 120e-3 # s
 DISTANCE_THRESHOLD = 20 # cm
 
 FINISH_TURN_ANGLE_THRESHOLD = np.deg2rad(5) 
@@ -13,14 +9,15 @@ TURN_ANGLE_THRESHOLD = np.deg2rad(35)
 
 WHEEL_DIST = 15.2 # centimeters
 
+DEL_SPEED_DEL_PSI = 0.06
 ROBOT_WIDTH = 0.152 # m
-ROBOT_SPEED = 0.16 # m/s
+ROBOT_SPEED_MAX = 0.15 # m/s
 WHEEL_RADIUS = 0.0325 # m
 OMEGA_MAX = 9.50 # rad/s
 
 # CONTROL LAW PARAMETERS
 XI = 0.70
-WN = 7.00      # rad/s
+WN = 4.50      # rad/s
 TAU = 0.615    # s
 TD = CYCLE_TIME     # s - time of discretization
 
