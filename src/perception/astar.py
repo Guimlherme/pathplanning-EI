@@ -104,6 +104,8 @@ class AStar(ABC):
                     heappush(openSet, neighbor)
         return None
 
+def manhattan_distance(x, y):
+    return abs(x[1] - y[1]) + abs(x[0] - y[0])
 
 def find_path(
     world_map,
@@ -111,17 +113,24 @@ def find_path(
     goal,
     reversePath=False,
     heuristic_cost_estimate_fnct=lambda a, b: Infinite,
-    distance_between_fnct=lambda a, b: 1.0,
     is_goal_reached_fnct=lambda a, b: a == b,
 ):
     """A non-class version of the path finding algorithm"""
 
     class FindPath(AStar):
         def heuristic_cost_estimate(self, current, goal):
-            return heuristic_cost_estimate_fnct(current, goal)
+            current = world_map.nodes[current]
+            goal = world_map.nodes[goal]
+            h = manhattan_distance(current, goal)
+            # print("Heuristic ", current, goal, h)
+            return h
 
         def distance_between(self, n1, n2):
-            return distance_between_fnct(n1, n2)
+            pos1 = world_map.nodes[n1]
+            pos2 = world_map.nodes[n2]
+            d = manhattan_distance(pos1, pos2)
+            # print("Distance between ", n1, n2, d)
+            return d
 
         def neighbors(self, node):
             return world_map.adjacency_list[node]

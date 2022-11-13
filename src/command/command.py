@@ -49,7 +49,7 @@ class RightTurn(Command):
 
 class Forward(Command):
 
-    def __init__(self, actuators):
+    def __init__(self, actuators, simulation=False):
         self.actuators = actuators
         self.command = 0
         
@@ -63,6 +63,7 @@ class Forward(Command):
                          8.796459, 8.796459, 9.047787, 9.48761, 9.990265]
 
         self.yp = [.10, .20, .25, .30, .35, .40, .45, .50, .55, .60, .65, .70, .75, .80, .85, .90, .95, 1.00]
+        self.simulation = simulation
 
     def execute(self, state):
 
@@ -93,9 +94,13 @@ class Forward(Command):
                 w_right = 2*(1/WHEEL_RADIUS)*(ROBOT_SPEED) - (OMEGA_MAX)
                 
 
-        w_left = np.interp(w_left,self.xp_left,self.yp)
-        w_right = np.interp(w_right,self.xp_right,self.yp)
-                
+        if self.simulation:
+            w_right = w_right / OMEGA_MAX
+            w_left = w_left / OMEGA_MAX
+        else:
+            w_left = np.interp(w_left,self.xp_left,self.yp)
+            w_right = np.interp(w_right,self.xp_right,self.yp)
+
         state.right_wheel_command = w_right
         state.left_wheel_command = w_left
         print("Left wheel speed: ", w_left)

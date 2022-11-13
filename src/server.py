@@ -40,6 +40,7 @@ system_clock = SystemClock()
 # Build sensors and actuators
 if args.mock:
     simulation = Simulation(system_clock)
+    simulation.add_obstacle(100, 100)
     sensors = MockSensors(system_clock, simulation, debug=debug)
     actuators = MockActuators(simulation)
 else:
@@ -51,7 +52,7 @@ else:
     sensors = ArduinoSensors(arduino, debug=debug)
 
 # Build remaining dependencies
-command_factory = CommandFactory(actuators)
+command_factory = CommandFactory(actuators, simulation=args.mock)
 sensing = Sensing(sensors, system_clock, debug=True)
 network = Network(control_panel, configs)
 

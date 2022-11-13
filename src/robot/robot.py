@@ -65,6 +65,8 @@ class Robot:
         clock_id = self.system_clock.get_id()
         while not self.shutdown:
             _ = self.system_clock.get_elapsed_time_since_last_call(clock_id) # mark first call
+            if self.simulation is not None:
+                self.simulation.update()
             if self.control_panel.run:
                 self.execute_cycle()
             else:
@@ -73,8 +75,7 @@ class Robot:
                     with open('log.txt', 'w') as logfile:
                         logfile.write(json.dumps(self.history))
                     self.reset_history()
-            if self.simulation is not None:
-                self.simulation.update()
+            
                 
             elapsed_time = self.system_clock.get_elapsed_time_since_last_call(clock_id) # get elapsed time
             remaining_time = CYCLE_TIME - elapsed_time
@@ -88,6 +89,7 @@ class Robot:
 
         right_encoder, left_encoder, obstacle_distance = self.sensing.collect()
         self.state.update_from_sensors(right_encoder, left_encoder, obstacle_distance)
+        self.state.update_next_waypoint(self.target_node)
         self.network.update_position_message(self.state)
         command = self.decision_making.decide(self.state, self.target, self.target_node)
         command.execute(self.state)
