@@ -1,5 +1,5 @@
 from .map import Map
-from constants import DISTANCE_THRESHOLD, WHEEL_DIST, OBSTACLE_THRESHOLD, OBSTACLE_DETECTED_CYCLE_THRESHOLD
+from constants import DISTANCE_THRESHOLD, WHEEL_DIST, OBSTACLE_THRESHOLD, OBSTACLE_DETECTED_CYCLE_THRESHOLD, FINISH_TURN_ANGLE_THRESHOLD
 from .preprocessing_image import preprocessing_image
 from .astar import find_path
 
@@ -78,7 +78,7 @@ class State:
             next_waypoint_pos = self.world_map.nodes[self.next_waypoint]
             cos_angulardelta = np.dot([self.x, self.y], next_waypoint_pos) / \
                                (np.linalg.norm([self.x, self.y]) * np.linalg.norm(next_waypoint_pos))
-            if cos_angulardelta > sqrt(3)/2 and self.waypoint_behind != self.next_waypoint:
+            if cos_angulardelta > cos(FINISH_TURN_ANGLE_THRESHOLD) and self.waypoint_behind != self.next_waypoint:
                 theta_est = self.theta + self.angular_speed * elapsed_time
                 theta_est %= 2 * pi
                 x_est = self.x + self.linear_speed * cos(self.theta) * elapsed_time
@@ -121,7 +121,7 @@ class State:
         if self.obstacle_detected:
             obstacle_x = self.x + obstacle_distance * cos(self.theta)
             obstacle_y = self.y + obstacle_distance * sin(self.theta)
-            print("REMOVING EDGE", self.node, self.obstacle_node)
+            # print("REMOVING EDGE", self.node, self.obstacle_node)
             obstacle_node = self.world_map.get_closest_node(obstacle_x, obstacle_y)
             self.waypoint_behind = self.next_waypoint
             if self.world_map.has_edge(self.node, obstacle_node):

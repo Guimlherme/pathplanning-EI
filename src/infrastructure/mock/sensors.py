@@ -44,7 +44,7 @@ class MockSensors:
             robot_to_object_angle = atan2(robot_to_object[1], robot_to_object[0])
 
             angle = angle_diference(robot_to_object_angle, self.simulation.theta)
-            print("Simulation ", self.simulation.x, self.simulation.y)
+            print("Simulation ", self.simulation.x, self.simulation.y, self.simulation.theta)
             print("Obstacle ", i, "distance", dist, "angle", angle)
             print("Position ", obj, " m ", m, "A", A, "B", B)
             print("Theta used", self.simulation.theta)
