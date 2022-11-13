@@ -8,7 +8,7 @@ from clock import SystemClock
 from command import CommandFactory
 from maps import get_trivial_map, get_grid_map, get_quarto_map
 
-from infrastructure.mock import MockSensors, MockActuators
+from infrastructure.mock import MockSensors, MockActuators, Simulation
 
 import argparse
 
@@ -37,9 +37,12 @@ control_panel = ControlPanel(should_run)
 system_clock = SystemClock()
 
 # Build sensors and actuators
-sensors = MockSensors(system_clock, debug=debug)
-actuators = MockActuators()
-if not args.mock:
+if args.mock:
+    simulation = Simulation(system_clock)
+    sensors = MockSensors(system_clock, simulation, debug=debug)
+    actuators = MockActuators(simulation)
+else:
+    simulation = None
     from infrastructure.arduino import Arduino, ArduinoSensors, ArduinoActuators
     arduino = Arduino()
     arduino.connect()
@@ -53,6 +56,6 @@ decision_making = DecisionMaking(command_factory, debug=debug)
 network = Network(control_panel, configs)
 
 # Instantiate the robot
-robot = Robot(sensing, decision_making, world_map, control_panel, system_clock, network, command_factory)
+robot = Robot(sensing, decision_making, world_map, control_panel, system_clock, network, command_factory, simulation)
 robot.run()
            

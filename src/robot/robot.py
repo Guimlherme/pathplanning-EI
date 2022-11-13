@@ -7,7 +7,7 @@ import json
 from constants import CYCLE_TIME
 
 class Robot:
-    def __init__(self, sensing, decision_making, world_map, control_panel, system_clock, network, command_factory, debug=True):
+    def __init__(self, sensing, decision_making, world_map, control_panel, system_clock, network, command_factory, simulation=None, debug=True):
         self.sensing = sensing
         self.decision_making = decision_making
         self.state = State(world_map, control_panel, system_clock, debug=True)
@@ -19,6 +19,7 @@ class Robot:
 
         self.target = (0, 0)
         self.target_node = 0
+        self.simulation = simulation
 
         self.debug = debug
         if self.debug:
@@ -72,6 +73,8 @@ class Robot:
                     with open('log.txt', 'w') as logfile:
                         logfile.write(json.dumps(self.history))
                     self.reset_history()
+            if self.simulation is not None:
+                self.simulation.update()
                 
             elapsed_time = self.system_clock.get_elapsed_time_since_last_call(clock_id) # get elapsed time
             remaining_time = CYCLE_TIME - elapsed_time

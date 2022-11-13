@@ -101,6 +101,7 @@ class State:
             print("Elapsed time since last localization update: %.3f ms" % (1000*elapsed_time)) 
             print("Localization (x, y, theta) = ", self.x, self.y, self.theta)
             print("Object distance: ", obstacle_distance, " obstacle detected = ", self.obstacle_detected)
+            print("Line angle: ", self.line_angle)
 
     def update_vision(self, image):
         elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.vision_clock_id)
