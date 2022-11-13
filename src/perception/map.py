@@ -1,4 +1,4 @@
-from math import sqrt
+from math import sqrt, atan2
 
 #import matplotlib.pyplot as plt
 #from matplotlib.patches import Rectangle
@@ -59,6 +59,15 @@ class Map:
                 min_dist_node = neighbor
 
         return min_dist_node
+
+    def find_position_on_grid(self, x, y, theta, current_node, next_node):
+        current_pos = self.nodes[current_node]
+        next_pos = self.nodes[next_node]
+
+        vect = [next_pos[0] - current_pos[0], next_pos[1] - current_pos[1]]
+
+        factor = (vect[0] * (x - current_pos[0]) + vect[1] * (y - current_pos[1])) / (vect[0] ** 2 + vect[1] ** 2)
+        return [current_pos[0] + factor * vect[0], current_pos[1] + factor * vect[1], atan2(vect[1], vect[0])]
 
 
 
