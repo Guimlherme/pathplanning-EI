@@ -10,20 +10,26 @@ class GridDecisionMaking:
         self.command_factory = command_factory
         self.debug = debug
         self.current_state = StoppedState(command_factory)
+        self.last_waypoint = None
+        self.next_waypoint = None
 
     def decide(self, state, target, target_node):
         next_waypoint = self.plan(state, target_node)
-        self.next_waypoint = next_waypoint
+        if self.next_waypoint != next_waypoint:
+            self.last_waypoint = self.next_waypoint
+            self.next_waypoint = next_waypoint
+        
         print("Current node: ", state.node)
         print("Target: ", target)
         print("Target node:", target_node)
+        print("Last waypoint: ", self.last_waypoint)
         print("Next waypoint: ", next_waypoint)
 
         command = self.current_state.execute(state, target, next_waypoint)
         next_state = self.current_state.check_transition(state, target, next_waypoint)
         if next_state is not None:
             self.current_state = next_state
-            
+
         if self.debug:
             print("Grid Decision Making:", command.get_name(), "\n")
         return command

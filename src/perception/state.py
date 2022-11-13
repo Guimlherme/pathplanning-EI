@@ -15,6 +15,7 @@ class State:
         self.lock = Lock()
         self.debug = debug
 
+        # Theta, x, y are constrained to the world map
         self.theta = 0
         self.x = 0
         self.y = 0
@@ -52,7 +53,7 @@ class State:
         self.theta = self.control_panel.reset_values[2]
         self.control_panel.reset_flag = False
 
-    def update_from_sensors(self, right_encoder, left_encoder, obstacle_distance) -> None:
+    def update_from_sensors(self, right_encoder, left_encoder, obstacle_distance, decision_making) -> None:
         if self.control_panel.reset_flag:
             self.reset()
         
@@ -70,12 +71,22 @@ class State:
         self.linear_speed = (right_speed + left_speed)/2
         self.angular_speed = (right_speed - left_speed)/WHEEL_DIST
 
+        # Updating map state
         self.previous_theta = self.theta
-        self.theta += self.angular_speed * elapsed_time 
-        self.theta %= 2*pi
+        if decision_making.next_state is not None:
+            theta_est = self.theta + self.angular_speed * elapsed_time
+            theta_est %= 2*pi
+            x_est = self.x + self.linear_speed * cos(self.theta) * elapsed_time
+            y_est = self.y + self.linear_speed * sin(self.theta) * elapsed_time
+            [self.x, self.y, self.theta, dist1] = self.world_map.find_position_on_grid(x_est, y_est, theta_est, decision_making)
+            if decision_making.last_state is not None:
+                [self.x, self.y, self.theta, dist2] = self.world_map.find_position_on_grid(x_est, y_est, theta_est, decision_making)
 
-        self.x += self.linear_speed * cos(self.theta) * elapsed_time 
-        self.y += self.linear_speed * sin(self.theta) * elapsed_time 
+        else:
+            self.theta += self.angular_speed * elapsed_time
+            self.theta %= 2 * pi
+            self.x += self.linear_speed * cos(self.theta) * elapsed_time
+            self.y += self.linear_speed * sin(self.theta) * elapsed_time
         
         self.node = self.world_map.get_closest_neighbor(self.node, self.x, self.y)
 
