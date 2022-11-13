@@ -93,8 +93,8 @@ class Forward(Command):
                 w_right = 2*(1/WHEEL_RADIUS)*(ROBOT_SPEED) - (OMEGA_MAX)
                 
         if w_left > OMEGA_NON_LINEAR or w_right > OMEGA_NON_LINEAR:
-            w_left = OMEGA_MAX * np.interp([w_left],self.xp,self.yp_left)
-            w_right = OMEGA_MAX * np.interp([w_right],self.xp,self.yp_right)
+            w_left = OMEGA_MAX * np.interp([w_left],self.xp,self.yp_left)[0]
+            w_right = OMEGA_MAX * np.interp([w_right],self.xp,self.yp_right)[0]
                 
         state.right_wheel_command = w_right
         state.left_wheel_command = w_left
