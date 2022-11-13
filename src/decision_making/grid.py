@@ -56,6 +56,7 @@ class ForwardState:
         if self.next_waypoint != state.next_waypoint:
             print("Changed waypoint!")
             changed_target = True
+
             self.next_waypoint = next_waypoint
             self.next_waypoint_position = np.array(state.world_map.nodes[next_waypoint])
 

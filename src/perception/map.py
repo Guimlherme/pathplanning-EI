@@ -1,4 +1,4 @@
-from math import sqrt, atan2
+from math import sqrt, atan2, pi
 
 #import matplotlib.pyplot as plt
 #from matplotlib.patches import Rectangle
@@ -67,7 +67,7 @@ class Map:
         vect = [next_pos[0] - current_pos[0], next_pos[1] - current_pos[1]]
 
         factor = (vect[0] * (x - current_pos[0]) + vect[1] * (y - current_pos[1])) / (vect[0] ** 2 + vect[1] ** 2)
-        return [current_pos[0] + factor * vect[0], current_pos[1] + factor * vect[1], atan2(vect[1], vect[0])]
+        return [current_pos[0] + factor * vect[0], current_pos[1] + factor * vect[1], atan2(vect[1], vect[0])%(2*pi)]
 
 
 

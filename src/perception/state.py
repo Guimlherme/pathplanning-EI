@@ -26,6 +26,7 @@ class State:
         self.world_map = world_map
         self.node = 0
         self.next_waypoint = None
+        self.waypoint_behind = self.node
 
         self.obstacle_detected = False
         self.obstacle_detected_cycle_count = 0
@@ -79,15 +80,15 @@ class State:
         self.previous_theta = self.theta
         if self.next_waypoint is not None:
             next_waypoint_pos = self.world_map.nodes[self.next_waypoint]
-            cos_angulardelta = np.dot(self.y - next_waypoint_pos[1], self.x - next_waypoint_pos[0]) / \
+            cos_angulardelta = np.dot([self.x, self.y], next_waypoint_pos) / \
                                (np.linalg.norm([self.x, self.y]) * np.linalg.norm(next_waypoint_pos))
-            if cos_angulardelta > sqrt(3)/2:
+            if cos_angulardelta > sqrt(3)/2 and self.waypoint_behind != self.next_waypoint:
                 theta_est = self.theta + self.angular_speed * elapsed_time
                 theta_est %= 2 * pi
                 x_est = self.x + self.linear_speed * cos(self.theta) * elapsed_time
                 y_est = self.y + self.linear_speed * sin(self.theta) * elapsed_time
                 [self.x, self.y, self.theta] = self.world_map.find_position_on_grid(x_est, y_est, theta_est,
-                                                                                    self.node, self.next_waypoint)
+                                                                         self.waypoint_behind, self.next_waypoint)
             else:
                 self.theta += self.angular_speed * elapsed_time
                 self.theta %= 2 * pi
@@ -100,7 +101,11 @@ class State:
             self.y += self.linear_speed * sin(self.theta) * elapsed_time
 
 
-        self.node = self.identify_node()
+        new_node = self.identify_node()
+        if new_node != self.node:
+            self.node = new_node
+            self.waypoint_behind = self.node
+
 
         with self.lock:
             self.previous_line_angle = self.line_angle
@@ -120,12 +125,13 @@ class State:
         if self.obstacle_detected:
             obstacle_x = self.x + obstacle_distance * cos(self.theta)
             obstacle_y = self.y + obstacle_distance * sin(self.theta)
-            # print("REMOVING EDGE", self.node, self.obstacle_node)
+            print("REMOVING EDGE", self.node, self.obstacle_node)
             obstacle_node = self.world_map.get_closest_node(obstacle_x, obstacle_y)
+            self.waypoint_behind = self.next_waypoint
             if self.world_map.has_edge(self.node, obstacle_node):
                 self.world_map.remove_edge(self.node, obstacle_node)
 
-        
+
 
         if self.debug:
             print("Encoders: ", right_encoder, left_encoder)
@@ -135,6 +141,7 @@ class State:
             print("Localization (x, y, theta) = ", self.x, self.y, self.theta)
             print("Object distance: ", obstacle_distance, " obstacle detected = ", self.obstacle_detected)
             print("Line angle: ", self.line_angle)
+            print("Waypoint behind", self.waypoint_behind)
 
     def update_vision(self, image):
         elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.vision_clock_id)
