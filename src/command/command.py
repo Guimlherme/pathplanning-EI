@@ -102,17 +102,17 @@ class Forward(Command):
                 
 
         if self.simulation:
-            w_right = 1
-            w_left = 1
+            w_right_percentual = 1
+            w_left_percentual = 1
         else:
-            w_left = np.interp(w_left,self.xp_left,self.yp)
-            w_right = np.interp(w_right,self.xp_right,self.yp)
+            w_left_percentual = np.interp(w_left,self.xp_left,self.yp)
+            w_right_percentual = np.interp(w_right,self.xp_right,self.yp)
 
-        state.right_wheel_command = w_right
-        state.left_wheel_command = w_left
-        print("Left wheel speed: ", w_left)
-        print("Right wheel speed: ", w_right)
-        self.actuators.set_speeds(w_right, w_left)
+        state.right_wheel_command = w_right_percentual
+        state.left_wheel_command = w_left_percentual
+        print("Left wheel speed: ", w_left_percentual)
+        print("Right wheel speed: ", w_right_percentual)
+        self.actuators.set_speeds(w_right_percentual, w_left_percentual)
     
     def get_name(self):
         return "Forward"
