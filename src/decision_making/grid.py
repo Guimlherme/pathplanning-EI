@@ -127,7 +127,7 @@ class TurnState:
 
     def check_transition(self, state, target, target_node, next_waypoint):
         delta_angle = state.theta - self.initial_theta
-        difference = angle_diference(delta_angle, self.angle)
+        difference = angle_diference(delta_angle, self.angle) + np.deg2rad(5) # ad hoc
         if self.debug:
             print("Finish turn state condition: initial theta=", self.initial_theta, "delta=", delta_angle, "angle", self.angle, "difference", difference)
         if  difference < FINISH_TURN_ANGLE_THRESHOLD:
