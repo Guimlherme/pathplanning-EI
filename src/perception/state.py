@@ -170,14 +170,17 @@ class State:
         self.next_waypoint = self.plan(target_node)
 
     def plan(self, target_node):
-        self.world_map.print()
-        print("Searching from ", self.node, target_node)
+        if self.debug:
+            self.world_map.print()
+            print("Searching from ", self.node, target_node)
         path = find_path(self.world_map, self.node, target_node)
         if path is None:
-            print("PATH NOT FOUND")
+            if self.debug:
+                print("PATH NOT FOUND")
             return self.node
         path_list = list(path)
-        print("Path: ", path_list)
+        if self.debug:
+            print("Path: ", path_list)
         if len(path_list) == 0:
             return self.node
         if len(path_list) == 1:

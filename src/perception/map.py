@@ -53,7 +53,6 @@ class Map:
 
         for neighbor, position in self.nodes.items():
             dist = sqrt( (position[0] - x)**2 + (position[1] - y)**2)
-            print(neighbor, dist, min_dist)
             if dist < min_dist or min_dist == -1:
                 min_dist = dist
                 min_dist_node = neighbor

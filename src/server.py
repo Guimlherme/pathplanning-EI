@@ -67,6 +67,6 @@ else: # defaults to grid
 
 
 # Instantiate the robot
-robot = Robot(sensing, decision_making, world_map, control_panel, system_clock, network, command_factory, simulation)
+robot = Robot(sensing, decision_making, world_map, control_panel, system_clock, network, command_factory, simulation, debug=debug)
 robot.run()
            

@@ -49,7 +49,7 @@ class RightTurn(Command):
 
 class Forward(Command):
 
-    def __init__(self, actuators, simulation=False):
+    def __init__(self, actuators, simulation=False, debug=False):
         self.actuators = actuators
         self.command = 0
         
@@ -67,6 +67,7 @@ class Forward(Command):
         
         self.speed = ROBOT_SPEED_MAX
         self.simulation = simulation
+        self.debug = debug
         
     def update_speed(self,psi):
         return ROBOT_SPEED_MAX - DEL_SPEED_DEL_PSI*np.abs(psi)
@@ -110,8 +111,9 @@ class Forward(Command):
 
         state.right_wheel_command = w_right_percentual
         state.left_wheel_command = w_left_percentual
-        print("Left wheel speed: ", w_left_percentual)
-        print("Right wheel speed: ", w_right_percentual)
+        if self.debug:
+            print("Left wheel speed: ", w_left_percentual)
+            print("Right wheel speed: ", w_right_percentual)
         self.actuators.set_speeds(w_right_percentual, w_left_percentual)
     
     def get_name(self):

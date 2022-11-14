@@ -8,14 +8,15 @@ class GridDecisionMaking:
     def __init__(self, command_factory, debug=False):
         self.command_factory = command_factory
         self.debug = debug
-        self.current_state = StoppedState(command_factory)
+        self.current_state = StoppedState(command_factory, debug)
         self.finished_turning = False
 
     def decide(self, state, target, target_node):
-        print("Current node: ", state.node)
-        print("Target: ", target)
-        print("Target node:", target_node)
-        print("Next waypoint: ", state.next_waypoint)
+        if self.debug:
+            print("Current node: ", state.node)
+            print("Target: ", target)
+            print("Target node:", target_node)
+            print("Next waypoint: ", state.next_waypoint)
 
         command = self.current_state.execute(state, target, target_node, state.next_waypoint)
         next_state = self.current_state.check_transition(state, target, target_node, state.next_waypoint)
@@ -38,10 +39,11 @@ class GridDecisionMaking:
         return product < 0
 
 class ForwardState:
-    def __init__(self, command_factory):
+    def __init__(self, command_factory, debug):
         self.command_factory = command_factory
         self.next_waypoint = None
         self.next_waypoint_position = None
+        self.debug = debug
 
     def execute(self, state, target, target_node, next_waypoint):
         if self.next_waypoint is None:
@@ -58,61 +60,65 @@ class ForwardState:
         #     state.update_next_waypoint(target_node)
 
         if self.next_waypoint != state.next_waypoint:
-            print("Changed waypoint!")
+            if self.debug:
+                print("Changed waypoint!")
             changed_target = True
 
             self.next_waypoint = next_waypoint
             self.next_waypoint_position = np.array(state.world_map.nodes[next_waypoint])
 
         if state.position_is(target):
-            return StoppedState(self.command_factory)
+            return StoppedState(self.command_factory, self.debug)
 
         robot_position = np.array([state.x, state.y])
         waypoint_vector = self.next_waypoint_position - robot_position
         waypoint_angle = atan2(waypoint_vector[1], waypoint_vector[0])
 
         angle_diff = angle_diference_with_sign(state.theta, waypoint_angle)
-        print("Robot position: ", robot_position)
-        print("Waypoint angle: ", waypoint_angle)
-        print("Angle difference: ", angle_diff)
+        if self.debug:
+            print("Robot position: ", robot_position)
+            print("Waypoint angle: ", waypoint_angle)
+            print("Angle difference: ", angle_diff)
 
         # if changed to a target behind it, turn now
         if changed_target and abs(angle_diff) > np.deg2rad(100):
             angle = angle_diff 
             if angle_diference(abs(angle_diff), pi) > np.deg2rad(30):
                 angle = pi
-            return TurnState(self.command_factory, state, angle)
+            return TurnState(self.command_factory, state, angle, self.debug)
         # turn when arrive at an intersection
         elif state.intersection_detected() and abs(angle_diff) > TURN_ANGLE_THRESHOLD:
             print("Decided to turn ", angle_diff)
-            return TurnState(self.command_factory, state, angle_diff)
+            return TurnState(self.command_factory, state, angle_diff, self.debug)
         return None
     
     def get_name(self):
         return "ForwardState"
 
 class StoppedState:
-    def __init__(self, command_factory):
+    def __init__(self, command_factory, debug):
         self.command_factory = command_factory
+        self.debug = debug
         
     def execute(self, state, target, target_node, next_waypoint):
         return self.command_factory.stopped()
         
     def check_transition(self, state, target, target_node, next_waypoint):
         if not state.position_is(target):
-            return ForwardState(self.command_factory)
+            return ForwardState(self.command_factory, self.debug)
         return None
 
     def get_name(self):
         return "StoppedState"
 
 class TurnState:
-    def __init__(self, command_factory, state, angle):
+    def __init__(self, command_factory, state, angle, debug):
         self.angle = angle
         self.initial_theta = state.theta
         self.command_factory = command_factory
 
         self.finished_turning = False
+        self.debug = debug
 
     def execute(self, state, target, target_node, next_waypoint):
         if self.angle > 0:
@@ -123,7 +129,7 @@ class TurnState:
         if angle_diference(state.theta - self.initial_theta, self.angle)  < FINISH_TURN_ANGLE_THRESHOLD:
             self.finished_turning = True
         if self.finished_turning and not state.obstacle_detected:
-            return ForwardState(self.command_factory)
+            return ForwardState(self.command_factory, self.debug)
         return None
 
     def get_name(self):

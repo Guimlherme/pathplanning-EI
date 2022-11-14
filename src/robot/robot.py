@@ -10,7 +10,7 @@ class Robot:
     def __init__(self, sensing, decision_making, world_map, control_panel, system_clock, network, command_factory, simulation=None, debug=True):
         self.sensing = sensing
         self.decision_making = decision_making
-        self.state = State(world_map, control_panel, system_clock, debug=True)
+        self.state = State(world_map, control_panel, system_clock, debug=debug)
         self.control_panel = control_panel
         self.shutdown = False
         self.system_clock = system_clock
@@ -71,10 +71,11 @@ class Robot:
                 self.execute_cycle()
             else:
                 self.command_factory.stopped().execute(self.state)
-                if len(self.history['x']) > 0:
-                    with open('log.txt', 'w') as logfile:
-                        logfile.write(json.dumps(self.history))
-                    self.reset_history()
+                if self.debug:
+                    if len(self.history['x']) > 0:
+                        with open('log.txt', 'w') as logfile:
+                            logfile.write(json.dumps(self.history))
+                        self.reset_history()
             
                 
             elapsed_time = self.system_clock.get_elapsed_time_since_last_call(clock_id) # get elapsed time
@@ -83,7 +84,6 @@ class Robot:
                 time.sleep(remaining_time)
 
     def execute_cycle(self):
-        print("Set target ", self.control_panel.target, self.target)
         if self.control_panel.target != self.target:
             self.target = self.control_panel.target
             self.target_node = self.state.world_map.get_closest_node(self.target[0], self.target[1])
