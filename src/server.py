@@ -19,6 +19,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('-r', '--run', action='store_true')
 parser.add_argument('-m', '--mock', action='store_true')
 parser.add_argument('-d', '--debug', action='store_true')
+parser.add_argument('-l', '--log', action='store_true')
 parser.add_argument('-a', '--host')
 parser.add_argument('-dm', '--decision_making')
 args = parser.parse_args()
@@ -67,6 +68,6 @@ else: # defaults to grid
 
 
 # Instantiate the robot
-robot = Robot(sensing, decision_making, world_map, control_panel, system_clock, network, command_factory, simulation, debug=debug)
+robot = Robot(sensing, decision_making, world_map, control_panel, system_clock, network, command_factory, simulation, debug=debug, log=args.log)
 robot.run()
            

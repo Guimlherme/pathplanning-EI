@@ -7,7 +7,7 @@ import json
 from constants import CYCLE_TIME
 
 class Robot:
-    def __init__(self, sensing, decision_making, world_map, control_panel, system_clock, network, command_factory, simulation=None, debug=True):
+    def __init__(self, sensing, decision_making, world_map, control_panel, system_clock, network, command_factory, simulation=None, debug=True, log=False):
         self.sensing = sensing
         self.decision_making = decision_making
         self.state = State(world_map, control_panel, system_clock, debug=debug)
@@ -22,7 +22,8 @@ class Robot:
         self.simulation = simulation
 
         self.debug = debug
-        if self.debug:
+        self.log = log
+        if self.log:
             self.reset_history()
     
     def reset_history(self):
@@ -71,7 +72,7 @@ class Robot:
                 self.execute_cycle()
             else:
                 self.command_factory.stopped().execute(self.state)
-                if self.debug:
+                if self.log:
                     if len(self.history['x']) > 0:
                         with open('log.txt', 'w') as logfile:
                             logfile.write(json.dumps(self.history))
@@ -94,7 +95,7 @@ class Robot:
         self.network.update_position_message(self.state)
         command = self.decision_making.decide(self.state, self.target, self.target_node)
         command.execute(self.state)
-        if self.debug:
+        if self.log:
             self.history['x'].append(self.state.x)
             self.history['y'].append(self.state.y)
             self.history['theta'].append(self.state.theta)
