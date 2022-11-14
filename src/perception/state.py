@@ -139,7 +139,7 @@ class State:
                 self.next_waypoint = self.node
                 self.updated_by_obstacle = True
             if self.world_map.has_edge(self.node, obstacle_node):
-                self.obstacles.append(Object(self.node, obstacle_node, self.world_map, self.system_clock))
+                self.obstacles.append(Object(self.node, obstacle_node, self.world_map))
 
         for obstacle in self.obstacles:
             if obstacle.check_expiration(): #It also deletes the obstacle if necessary
