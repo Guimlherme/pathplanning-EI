@@ -2,7 +2,7 @@ import numpy as np
 
 # Values used for real robot
 CYCLE_TIME = 120e-3 # s
-DISTANCE_THRESHOLD = 20 # cm
+DISTANCE_THRESHOLD = 10 # cm
 
 # Values used for simulation
 # CYCLE_TIME = 30e-3 # s
