@@ -37,10 +37,11 @@ world_map = get_grid_map()
 # Build control panel and system clock
 control_panel = ControlPanel(should_run)
 system_clock = SystemClock()
+state = State(world_map, control_panel, system_clock, debug=debug)
 
 # Build sensors and actuators
 if args.mock:
-    simulation = Simulation(system_clock)
+    simulation = Simulation(system_clock, state)
     simulation.add_obstacle(100, 100)
     simulation.add_obstacle(200, 200)
     simulation.add_obstacle(300, 100)
@@ -68,6 +69,6 @@ else: # defaults to grid
 
 
 # Instantiate the robot
-robot = Robot(sensing, decision_making, world_map, control_panel, system_clock, network, command_factory, simulation, debug=debug, log=args.log)
+robot = Robot(state, sensing, decision_making, world_map, control_panel, system_clock, network, command_factory, simulation, debug=debug, log=args.log)
 robot.run()
            

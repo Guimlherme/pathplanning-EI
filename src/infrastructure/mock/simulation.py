@@ -3,7 +3,7 @@ from constants import DISTANCE_THRESHOLD, WHEEL_DIST
 import numpy as np 
 
 class Simulation:
-    def __init__(self, system_clock) -> None:
+    def __init__(self, system_clock, state) -> None:
         self.x = 0
         self.y = 0
         self.theta = 0
@@ -18,6 +18,7 @@ class Simulation:
         self.left_encoder_value = 0
 
         self.obstacle_positions = [ ]
+        self.state = state
         
     def add_obstacle(self, x, y):
         self.obstacle_positions.append( (x, y) )
@@ -39,7 +40,10 @@ class Simulation:
         self.left_encoder_value += abs(self.left_speed * elapsed_time)
 
         # Update position
-        self.theta += self.angular_speed * elapsed_time 
-        self.theta %= 2*pi
-        self.x += self.linear_speed * cos(self.theta) * elapsed_time 
-        self.y += self.linear_speed * sin(self.theta) * elapsed_time 
+        self.theta = self.state.theta
+        self.x = self.state.x
+        self.y = self.state.y
+        # self.theta += self.angular_speed * elapsed_time 
+        # self.theta %= 2*pi
+        # self.x += self.linear_speed * cos(self.theta) * elapsed_time 
+        # self.y += self.linear_speed * sin(self.theta) * elapsed_time 

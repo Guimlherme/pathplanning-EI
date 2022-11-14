@@ -1,8 +1,8 @@
 import numpy as np
 
 # Values used for real robot
-CYCLE_TIME = 120e-3 # s
-DISTANCE_THRESHOLD = 10 # cm
+CYCLE_TIME = 120e-3 # s, used in simulation: 30e-3
+DISTANCE_THRESHOLD = 10 # cm, used in simulation: 20
 
 # Values used for simulation
 # CYCLE_TIME = 30e-3 # s
@@ -10,9 +10,9 @@ DISTANCE_THRESHOLD = 10 # cm
 
 # An obstacle is considered as detected if it is closer than OBSTACLE_THRESHOLD for at least OBSTACLE_CYCLE_THRESHOLD cycles
 OBSTACLE_THRESHOLD = 50
-OBSTACLE_DETECTED_CYCLE_THRESHOLD = 10
+OBSTACLE_DETECTED_CYCLE_THRESHOLD = 10 # used in simulation: 2
 
-FINISH_TURN_ANGLE_THRESHOLD = np.deg2rad(5) 
+FINISH_TURN_ANGLE_THRESHOLD = np.deg2rad(12) 
 TURN_ANGLE_THRESHOLD = np.deg2rad(35)
 
 WHEEL_DIST = 15.2 # centimeters

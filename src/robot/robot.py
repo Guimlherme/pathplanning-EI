@@ -7,10 +7,10 @@ import json
 from constants import CYCLE_TIME
 
 class Robot:
-    def __init__(self, sensing, decision_making, world_map, control_panel, system_clock, network, command_factory, simulation=None, debug=True, log=False):
+    def __init__(self, state, sensing, decision_making, world_map, control_panel, system_clock, network, command_factory, simulation=None, debug=True, log=False):
         self.sensing = sensing
         self.decision_making = decision_making
-        self.state = State(world_map, control_panel, system_clock, debug=debug)
+        self.state = state
         self.control_panel = control_panel
         self.shutdown = False
         self.system_clock = system_clock
