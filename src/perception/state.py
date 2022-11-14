@@ -1,5 +1,6 @@
 from .map import Map
-from constants import DISTANCE_THRESHOLD, WHEEL_DIST, OBSTACLE_THRESHOLD, OBSTACLE_DETECTED_CYCLE_THRESHOLD, FINISH_TURN_ANGLE_THRESHOLD
+from constants import DISTANCE_THRESHOLD, WHEEL_DIST, OBSTACLE_THRESHOLD, OBSTACLE_DETECTED_CYCLE_THRESHOLD, \
+    FINISH_TURN_ANGLE_THRESHOLD
 from .preprocessing_image import preprocessing_image
 from .astar import find_path
 
@@ -54,7 +55,7 @@ class State:
         self.theta = self.control_panel.reset_values[2]
         self.control_panel.reset_flag = False
 
-    def update_from_sensors(self, right_encoder, left_encoder, obstacle_distance) -> None:
+    def update_from_sensors(self, right_encoder, left_encoder, obstacle_distance, decision_making) -> None:
         if self.control_panel.reset_flag:
             self.reset()
 
@@ -78,13 +79,16 @@ class State:
             next_waypoint_pos = self.world_map.nodes[self.next_waypoint]
             cos_angulardelta = np.dot([self.x, self.y], next_waypoint_pos) / \
                                (np.linalg.norm([self.x, self.y]) * np.linalg.norm(next_waypoint_pos))
-            if cos_angulardelta > cos(FINISH_TURN_ANGLE_THRESHOLD) and self.waypoint_behind != self.next_waypoint:
+            if (cos_angulardelta > cos(FINISH_TURN_ANGLE_THRESHOLD) and self.waypoint_behind != self.next_waypoint) \
+                    or decision_making.finished_turning:
+                decision_making.finished_turning = False
                 theta_est = self.theta + self.angular_speed * elapsed_time
                 theta_est %= 2 * pi
                 x_est = self.x + self.linear_speed * cos(self.theta) * elapsed_time
                 y_est = self.y + self.linear_speed * sin(self.theta) * elapsed_time
                 [self.x, self.y, self.theta] = self.world_map.find_position_on_grid(x_est, y_est, theta_est,
-                                                                         self.waypoint_behind, self.next_waypoint)
+                                                                                    self.waypoint_behind,
+                                                                                    self.next_waypoint)
             else:
                 self.theta += self.angular_speed * elapsed_time
                 self.theta %= 2 * pi
@@ -96,12 +100,10 @@ class State:
             self.x += self.linear_speed * cos(self.theta) * elapsed_time
             self.y += self.linear_speed * sin(self.theta) * elapsed_time
 
-
         new_node = self.identify_node()
         if new_node != self.node:
             self.node = new_node
             self.waypoint_behind = self.node
-
 
         with self.lock:
             self.previous_line_angle = self.line_angle
@@ -126,8 +128,6 @@ class State:
             self.waypoint_behind = self.next_waypoint
             if self.world_map.has_edge(self.node, obstacle_node):
                 self.world_map.remove_edge(self.node, obstacle_node)
-
-
 
         if self.debug:
             print("Encoders: ", right_encoder, left_encoder)

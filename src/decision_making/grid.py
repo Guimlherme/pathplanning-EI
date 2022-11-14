@@ -9,6 +9,7 @@ class GridDecisionMaking:
         self.command_factory = command_factory
         self.debug = debug
         self.current_state = StoppedState(command_factory)
+        self.finished_turning = False
 
     def decide(self, state, target, target_node):
         print("Current node: ", state.node)
@@ -18,6 +19,9 @@ class GridDecisionMaking:
 
         command = self.current_state.execute(state, target, target_node, state.next_waypoint)
         next_state = self.current_state.check_transition(state, target, target_node, state.next_waypoint)
+        if self.current_state.get_name() == "TurnState" and next_state.get_name() == "ForwardState":
+            self.finished_turning = True
+
         if next_state is not None:
             self.current_state = next_state
             

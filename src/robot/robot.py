@@ -89,7 +89,7 @@ class Robot:
             self.target_node = self.state.world_map.get_closest_node(self.target[0], self.target[1])
 
         right_encoder, left_encoder, obstacle_distance = self.sensing.collect()
-        self.state.update_from_sensors(right_encoder, left_encoder, obstacle_distance)
+        self.state.update_from_sensors(right_encoder, left_encoder, obstacle_distance, self.decision_making)
         self.state.update_next_waypoint(self.target_node)
         self.network.update_position_message(self.state)
         command = self.decision_making.decide(self.state, self.target, self.target_node)
