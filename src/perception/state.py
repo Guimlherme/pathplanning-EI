@@ -88,7 +88,7 @@ class State:
             if (cos_angulardelta > cos(FINISH_TURN_ANGLE_THRESHOLD)) \
                     or decision_making.finished_turning:
                 decision_making.finished_turning = False
-                theta_est = self.theta + self.angular_speed * elapsed_time
+                theta_est = self.theta + self.angular_speed * elapsed_time/2
                 theta_est %= 2 * pi
                 x_est = self.x + self.linear_speed * cos(self.theta) * elapsed_time
                 y_est = self.y + self.linear_speed * sin(self.theta) * elapsed_time
@@ -96,12 +96,12 @@ class State:
                                                                                     self.waypoint_behind,
                                                                                     self.next_waypoint)
             else:
-                self.theta += self.angular_speed * elapsed_time
+                self.theta += self.angular_speed * elapsed_time / 2
                 self.theta %= 2 * pi
                 self.x += self.linear_speed * cos(self.theta) * elapsed_time
                 self.y += self.linear_speed * sin(self.theta) * elapsed_time
         else:
-            self.theta += self.angular_speed * elapsed_time
+            self.theta += self.angular_speed * elapsed_time / 2
             self.theta %= 2 * pi
             self.x += self.linear_speed * cos(self.theta) * elapsed_time
             self.y += self.linear_speed * sin(self.theta) * elapsed_time
