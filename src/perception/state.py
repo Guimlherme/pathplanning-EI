@@ -80,7 +80,10 @@ class State:
         self.previous_theta = self.theta
         if self.next_waypoint is not None and self.waypoint_behind != self.next_waypoint:
             next_waypoint_pos = self.world_map.nodes[self.next_waypoint]
-            node_pos = self.world_map.nodes[self.node]
+            if not self.updated_by_obstacle:
+                node_pos = self.world_map.nodes[self.node]
+            else:
+                node_pos = self.world_map.nodes[self.waypoint_behind]
             vehicle_vet = np.array([cos(self.theta), sin(self.theta)])
             path_vet = np.array(np.array(next_waypoint_pos) - np.array(node_pos))
             cos_angulardelta = np.dot(vehicle_vet, path_vet) / \
