@@ -3,6 +3,7 @@ from constants import DISTANCE_THRESHOLD, WHEEL_DIST, OBSTACLE_THRESHOLD, OBSTAC
     FINISH_TURN_ANGLE_THRESHOLD
 from .preprocessing_image import preprocessing_image
 from .astar import find_path
+from .object import Object
 
 from math import sin, cos, pi, sqrt
 import numpy as np
@@ -24,6 +25,10 @@ class State:
         self.localization_clock_id = system_clock.get_id()
         self.vision_clock_id = system_clock.get_id()
         self.reset()
+
+        self.obstacles = []
+
+
 
     def reset(self):
         self.theta = self.control_panel.reset_values[2]
@@ -73,11 +78,13 @@ class State:
 
         # Updating map state
         self.previous_theta = self.theta
-        if self.next_waypoint is not None:
+        if self.next_waypoint is not None and self.waypoint_behind != self.next_waypoint:
             next_waypoint_pos = self.world_map.nodes[self.next_waypoint]
-            cos_angulardelta = np.dot([self.x, self.y], next_waypoint_pos) / \
-                               (np.linalg.norm([self.x, self.y]) * np.linalg.norm(next_waypoint_pos))
-            if (cos_angulardelta > cos(FINISH_TURN_ANGLE_THRESHOLD) and self.waypoint_behind != self.next_waypoint) \
+            vehicle_vet = np.array([cos(self.theta), sin(self.theta)])
+            path_vet = np.array(np.array(next_waypoint_pos) - np.array(self.waypoint_behind))
+            cos_angulardelta = np.dot(vehicle_vet, path_vet) / \
+                               (np.linalg.norm(vehicle_vet) * np.linalg.norm(path_vet))
+            if (cos_angulardelta > cos(FINISH_TURN_ANGLE_THRESHOLD)) \
                     or decision_making.finished_turning:
                 decision_making.finished_turning = False
                 theta_est = self.theta + self.angular_speed * elapsed_time
@@ -132,7 +139,12 @@ class State:
                 self.next_waypoint = self.node
                 self.updated_by_obstacle = True
             if self.world_map.has_edge(self.node, obstacle_node):
-                self.world_map.remove_edge(self.node, obstacle_node)
+                self.obstacles.append(Object(self.node, obstacle_node, self.world_map))
+
+        for obstacle in self.obstacles:
+            if obstacle.check_expiration(): #It also deletes the obstacle if necessary
+                self.obstacles.remove(obstacle)
+                del obstacle
 
         if self.debug:
             print("Encoders: ", right_encoder, left_encoder)

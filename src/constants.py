@@ -10,9 +10,10 @@ DISTANCE_THRESHOLD = 1 # cm, used in simulation: 20
 
 # An obstacle is considered as detected if it is closer than OBSTACLE_THRESHOLD for at least OBSTACLE_CYCLE_THRESHOLD cycles
 OBSTACLE_THRESHOLD = 50
-OBSTACLE_DETECTED_CYCLE_THRESHOLD = 10 # used in simulation: 2
+OBSTACLE_DETECTED_CYCLE_THRESHOLD = 10
+OBJECT_EXPIRATION_TIME = 30 # s
 
-FINISH_TURN_ANGLE_THRESHOLD = np.deg2rad(12) 
+FINISH_TURN_ANGLE_THRESHOLD = np.deg2rad(5) 
 TURN_ANGLE_THRESHOLD = np.deg2rad(35)
 
 WHEEL_DIST = 15.2 # centimeters
