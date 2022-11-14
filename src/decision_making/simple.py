@@ -66,7 +66,7 @@ class TurnState:
         return self.command_factory.right_turn()
 
     def check_transition(self, state, target):
-        if angle_diference(state.theta - self.initial_theta, self.angle)  < np.deg2rad(10):
+        if angle_diference(state.theta - self.initial_theta, self.angle) - np.deg2rad(5) < np.deg2rad(10):
             self.finished_turning = True
         if self.finished_turning and not state.obstacle_detected:
             return ForwardState(self.command_factory)
