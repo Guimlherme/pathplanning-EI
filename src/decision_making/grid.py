@@ -19,7 +19,7 @@ class GridDecisionMaking:
 
         command = self.current_state.execute(state, target, target_node, state.next_waypoint)
         next_state = self.current_state.check_transition(state, target, target_node, state.next_waypoint)
-        if self.current_state.get_name() == "TurnState" and next_state.get_name() == "ForwardState":
+        if isinstance(self.current_state, TurnState) and isinstance(next_state, ForwardState):
             self.finished_turning = True
 
         if next_state is not None:
