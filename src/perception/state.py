@@ -15,12 +15,23 @@ class State:
         self.lock = Lock()
         self.debug = debug
 
-        # Theta, x, y are constrained to the world map
-        self.theta = 0
-        self.x = 0
-        self.y = 0
 
         self.world_map = world_map
+
+        self.control_panel = control_panel
+
+        self.system_clock = system_clock
+        self.localization_clock_id = system_clock.get_id()
+        self.vision_clock_id = system_clock.get_id()
+        self.reset()
+
+
+
+    def reset(self):
+        self.theta = self.control_panel.reset_values[2]
+        self.x = self.control_panel.reset_values[0]
+        self.y = self.control_panel.reset_values[1]
+
         self.node = 0
         self.next_waypoint = None
         self.waypoint_behind = self.node
@@ -28,12 +39,6 @@ class State:
 
         self.obstacle_detected = False
         self.obstacle_detected_cycle_count = 0
-
-        self.control_panel = control_panel
-
-        self.system_clock = system_clock
-        self.localization_clock_id = system_clock.get_id()
-        self.vision_clock_id = system_clock.get_id()
 
         self.line_angle = 0
         self.linear_speed = 0
@@ -49,12 +54,6 @@ class State:
 
         self.vision_elapsed_time = 0
         self.localization_elapsed_time = 0
-
-    def reset(self):
-        self.x = self.control_panel.reset_values[0]
-        self.y = self.control_panel.reset_values[1]
-        self.theta = self.control_panel.reset_values[2]
-        self.control_panel.reset_flag = False
 
     def update_from_sensors(self, right_encoder, left_encoder, obstacle_distance, decision_making) -> None:
         if self.control_panel.reset_flag:

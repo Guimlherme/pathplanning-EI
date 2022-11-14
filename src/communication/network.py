@@ -48,9 +48,20 @@ class Network:
         elif commands[0] == 's':
             self.control_panel.run = False
         elif commands[0] == 't':
-            self.control_panel.set_target(int(commands[1]), int(commands[2]))
+            try:
+                vx = int(commands[1])
+                vy = int(commands[2])
+            except ValueError as ve:
+                return "Bad format: must be integers"
+            self.control_panel.set_target(vx, vy)
         elif commands[0] == 'i':
-            self.control_panel.reset_state(int(commands[1]), int(commands[2]), int(commands[3]))
+            try:
+                x = int(commands[1])
+                y = int(commands[2])
+                theta = float(commands[3])
+            except ValueError as ve:
+                return "Bad format"
+            self.control_panel.reset_state(x, y, theta)
         elif commands[0] == 'u':
             return str(self.position[0])+" "+str(self.position[1])+" "+str(self.position[2])
         else:

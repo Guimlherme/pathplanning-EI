@@ -7,6 +7,7 @@ class ControlPanel:
         self.run = should_run
         self.target = (0, 0)
         self.reset_flag = False
+        self.reset_values = (0, 0, 0)
     
     def set_target(self, x, y):
         self.target = (x, y)
