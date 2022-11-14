@@ -1,6 +1,6 @@
 RIGHT = 1
 LEFT = -1
-from constants import WHEEL_RADIUS,ROBOT_SPEED_MAX,ROBOT_WIDTH,OMEGA_MAX,CONTROL_PARAMETERS,DEL_SPEED_DEL_PSI
+from constants import WHEEL_RADIUS,ROBOT_SPEED_MAX,ROBOT_WIDTH,OMEGA_MAX,CONTROL_PARAMETERS,DEL_SPEED_DEL_PSI, TURN_SPEED
 import numpy as np
 
 class Command:
@@ -29,7 +29,7 @@ class LeftTurn(Command):
     def execute(self, state):
         state.right_wheel_command = 1
         state.left_wheel_command = -1
-        self.actuators.set_speeds(1, -1)
+        self.actuators.set_speeds(TURN_SPEED, -TURN_SPEED)
 
     def get_name(self):
         return "LeftTurn"
@@ -41,7 +41,7 @@ class RightTurn(Command):
     def execute(self, state):
         state.right_wheel_command = -1
         state.left_wheel_command = 1
-        self.actuators.set_speeds(-1, 1)
+        self.actuators.set_speeds(-TURN_SPEED, TURN_SPEED)
 
     def get_name(self):
         return "RightTurn"
