@@ -26,10 +26,13 @@ class State:
         self.vision_clock_id = system_clock.get_id()
         self.reset()
 
+<<<<<<< HEAD
         self.obstacles = []
 
 
 
+=======
+>>>>>>> 0bcbf689d8eb45e00e4a2c26bbfb51498d00c989
     def reset(self):
         self.theta = self.control_panel.reset_values[2]
         self.x = self.control_panel.reset_values[0]
@@ -84,7 +87,6 @@ class State:
             path_vet = np.array(np.array(next_waypoint_pos) - np.array(self.waypoint_behind))
             cos_angulardelta = np.dot(vehicle_vet, path_vet) / \
                                (np.linalg.norm(vehicle_vet) * np.linalg.norm(path_vet))
-            print("Turn decision stop", vehicle_vet, path_vet, cos_angulardelta)
             if (cos_angulardelta > cos(FINISH_TURN_ANGLE_THRESHOLD)) \
                     or decision_making.finished_turning:
                 decision_making.finished_turning = False
@@ -129,7 +131,6 @@ class State:
                 self.obstacle_detected = True
         else:
             self.obstacle_detected = False
-            self.obstacle_detected_cycle_count = 0
 
         if self.obstacle_detected:
             obstacle_x = self.x + obstacle_distance * cos(self.theta)
@@ -141,7 +142,7 @@ class State:
                 self.next_waypoint = self.node
                 self.updated_by_obstacle = True
             if self.world_map.has_edge(self.node, obstacle_node):
-                self.obstacles.append(Object(self.node, obstacle_node, self.world_map))
+                self.obstacles.append(Object(self.node, obstacle_node, self.world_map, self.system_clock))
 
         for obstacle in self.obstacles:
             if obstacle.check_expiration(): #It also deletes the obstacle if necessary
