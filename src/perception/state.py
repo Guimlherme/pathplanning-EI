@@ -128,6 +128,7 @@ class State:
                 self.obstacle_detected = True
         else:
             self.obstacle_detected = False
+            self.obstacle_detected_cycle_count = 0
 
         if self.obstacle_detected:
             obstacle_x = self.x + obstacle_distance * cos(self.theta)
