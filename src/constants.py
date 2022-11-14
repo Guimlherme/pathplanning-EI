@@ -9,7 +9,7 @@ DISTANCE_THRESHOLD = 5 # cm, used in simulation: 20
 # DISTANCE_THRESHOLD = 5 # cm
 
 # An obstacle is considered as detected if it is closer than OBSTACLE_THRESHOLD for at least OBSTACLE_CYCLE_THRESHOLD cycles
-OBSTACLE_THRESHOLD = 50
+OBSTACLE_THRESHOLD = 20
 OBSTACLE_DETECTED_CYCLE_THRESHOLD = 10
 OBJECT_EXPIRATION_TIME = 30 # s
 
