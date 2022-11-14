@@ -24,6 +24,7 @@ class State:
         self.node = 0
         self.next_waypoint = None
         self.waypoint_behind = self.node
+        self.updated_by_obstacle = False
 
         self.obstacle_detected = False
         self.obstacle_detected_cycle_count = 0
@@ -104,6 +105,7 @@ class State:
         if new_node != self.node:
             self.node = new_node
             self.waypoint_behind = self.node
+            self.updated_by_obstacle = False
 
         with self.lock:
             self.previous_line_angle = self.line_angle
@@ -125,7 +127,9 @@ class State:
             obstacle_y = self.y + obstacle_distance * sin(self.theta)
             # print("REMOVING EDGE", self.node, self.obstacle_node)
             obstacle_node = self.world_map.get_closest_node(obstacle_x, obstacle_y)
-            self.waypoint_behind = self.next_waypoint
+            if not self.updated_by_obstacle:
+                self.waypoint_behind = self.next_waypoint
+                self.updated_by_obstacle = True
             if self.world_map.has_edge(self.node, obstacle_node):
                 self.world_map.remove_edge(self.node, obstacle_node)
 
