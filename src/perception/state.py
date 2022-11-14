@@ -121,7 +121,7 @@ class State:
         self.obstacle_distance = obstacle_distance
         self.localization_elapsed_time = elapsed_time
 
-        if obstacle_distance < OBSTACLE_THRESHOLD:
+        if obstacle_distance < OBSTACLE_THRESHOLD and obstacle_distance != 0:
             if self.debug:
                 print("Obstacle detected. Cycles: ", self.obstacle_detected_cycle_count)
             if self.obstacle_detected_cycle_count < OBSTACLE_DETECTED_CYCLE_THRESHOLD:
