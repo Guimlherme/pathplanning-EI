@@ -106,7 +106,8 @@ class State:
             self.y += self.linear_speed * sin(self.theta) * elapsed_time
 
         new_node = self.identify_node()
-        if new_node != self.node:
+
+        if self.intersection_detected():
             self.node = new_node
             self.waypoint_behind = self.node
             self.updated_by_obstacle = False
@@ -119,6 +120,8 @@ class State:
         self.localization_elapsed_time = elapsed_time
 
         if obstacle_distance < OBSTACLE_THRESHOLD:
+            if self.debug:
+                print("Obstacle detected. Cycles: ", self.obstacle_detected_cycle_count)
             if self.obstacle_detected_cycle_count < OBSTACLE_DETECTED_CYCLE_THRESHOLD:
                 self.obstacle_detected_cycle_count += 1
             else:
@@ -133,6 +136,7 @@ class State:
             obstacle_node = self.world_map.get_closest_node(obstacle_x, obstacle_y)
             if not self.updated_by_obstacle:
                 self.waypoint_behind = self.next_waypoint
+                self.next_waypoint = self.node
                 self.updated_by_obstacle = True
             if self.world_map.has_edge(self.node, obstacle_node):
                 self.obstacles.append(Object(self.node, obstacle_node, self.world_map, self.system_clock))
@@ -176,7 +180,8 @@ class State:
         return self.node
 
     def update_next_waypoint(self, target_node):
-        self.next_waypoint = self.plan(target_node)
+        if not self.updated_by_obstacle:
+            self.next_waypoint = self.plan(target_node)
 
     def plan(self, target_node):
         if self.debug:
