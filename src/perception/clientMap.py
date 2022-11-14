@@ -31,9 +31,9 @@ class ClientMap(Map):
             self.plt.ion()
             self.plt.show(block=False)
 
-        # obstacles = [(100, 100), (200, 200), (300, 100)]
-        # for obstacle in obstacles:
-        #     self.plt.scatter(*obstacle, c='#000000', s=200)
+        obstacles = [(100, 100), (200, 200), (300, 100)]
+        for obstacle in obstacles:
+            self.plt.scatter(*obstacle, c='#000000', s=200)
 
         for node in self.nodes:
             self.plt.scatter(*self.nodes[node], c='#0000FF')

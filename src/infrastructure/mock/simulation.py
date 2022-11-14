@@ -3,7 +3,7 @@ from constants import DISTANCE_THRESHOLD, WHEEL_DIST
 import numpy as np 
 
 class Simulation:
-    def __init__(self, system_clock) -> None:
+    def __init__(self, system_clock, state) -> None:
         self.x = 0
         self.y = 0
         self.theta = 0
@@ -18,11 +18,13 @@ class Simulation:
         self.left_encoder_value = 0
 
         self.obstacle_positions = [ ]
+        self.state = state
         
     def add_obstacle(self, x, y):
         self.obstacle_positions.append( (x, y) )
 
     def update(self):
+        print("Updating simulation")
         # Stop when hit
         for obj in self.obstacle_positions:
             if np.linalg.norm(np.array([self.x, self.y]) - np.array(obj)) < DISTANCE_THRESHOLD:
@@ -31,6 +33,7 @@ class Simulation:
 
         self.linear_speed = 100*(self.right_speed + self.left_speed)/2
         self.angular_speed = 100*(self.right_speed - self.left_speed)/WHEEL_DIST
+        print("Simulating angular speed of ", self.angular_speed, "due to", self.left_speed, self.right_speed)
 
         elapsed_time = self.system_clock.get_elapsed_time_since_last_call(self.clock_id)
 
@@ -39,7 +42,10 @@ class Simulation:
         self.left_encoder_value += abs(self.left_speed * elapsed_time)
 
         # Update position
-        self.theta += self.angular_speed * elapsed_time 
-        self.theta %= 2*pi
-        self.x += self.linear_speed * cos(self.theta) * elapsed_time 
-        self.y += self.linear_speed * sin(self.theta) * elapsed_time 
+        self.theta = self.state.theta
+        self.x = self.state.x
+        self.y = self.state.y
+        # self.theta += self.angular_speed * elapsed_time 
+        # self.theta %= 2*pi
+        # self.x += self.linear_speed * cos(self.theta) * elapsed_time 
+        # self.y += self.linear_speed * sin(self.theta) * elapsed_time 

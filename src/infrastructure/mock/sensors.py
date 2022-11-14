@@ -55,7 +55,7 @@ class MockSensors:
 
         if len(aligned_objects) == 0:
             return 99999
-
+        
         # 3. Get the closest object
         # OBS: Using Euclidian distance, ideally would get distance in the robot vision line 
         # (distance to projection instead of distance to point)
