@@ -8,6 +8,7 @@ class SimpleDecisionMaking:
         self.command_factory = command_factory
         self.debug = debug
         self.current_state = StoppedState(command_factory)
+        self.finished_turning = False
 
     def decide(self, state, target, target_node):
         command = self.current_state.execute(state, target)
